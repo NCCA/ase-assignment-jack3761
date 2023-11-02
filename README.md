@@ -1,5 +1,5 @@
-# Jack Purkiss ASE Simulator Project (complete idea coming soon)
+# Jack Purkiss Cloth Simulator Project
 
 ## Overview
 
-For my assignment I will create a simulator / procedurally generate a model to be exported in a given data format
+For my assignment I will create a cloth simulator program
