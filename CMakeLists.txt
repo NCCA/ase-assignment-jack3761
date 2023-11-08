@@ -12,7 +12,14 @@ set(ExName ClothSim)
 add_executable(${ExName}
         src/main.cpp
         src/ClothSim.cpp
+        src/ClothMesh.cpp
+        src/Particle.cpp
+        src/Constraint.cpp
+        include/Vec3.h
         include/ClothSim.h
+        include/ClothMesh.h
+        include/Particle.h
+        include/Constraint.h
 )
 target_include_directories(${ExName} PRIVATE include)
 
@@ -22,7 +29,12 @@ include(GoogleTest)
 set(TestName ClothSimTests)
 add_executable(${TestName}
         tests/ClothSimTests.cpp
+        tests/ParticleTests.cpp
         src/ClothSim.cpp
+        src/Particle.cpp
+        include/Vec3.h
+        include/Particle.h
+
 )
 target_include_directories(${TestName} PRIVATE include)
 target_link_libraries(${TestName} PRIVATE GTest::gtest GTest::gtest_main)
