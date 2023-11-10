@@ -1,4 +1,4 @@
-# Jack Purkiss Inextensible Cloth Simulator Project
+# Jack Purkiss Position Based Dynamics Cloth Simulator Project
 
 ## Overview
 
