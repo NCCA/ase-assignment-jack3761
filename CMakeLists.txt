@@ -15,6 +15,7 @@ add_executable(${ExName}
         src/ClothMesh.cpp
         src/Particle.cpp
         src/Constraint.cpp
+        src/Vec3.cpp
         include/Vec3.h
         include/ClothSim.h
         include/ClothMesh.h
@@ -32,6 +33,8 @@ add_executable(${TestName}
         tests/ParticleTests.cpp
         src/ClothSim.cpp
         src/Particle.cpp
+        src/ClothMesh.cpp
+        include/ClothMesh.h
         include/Vec3.h
         include/Particle.h
 
