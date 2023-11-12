@@ -9,9 +9,21 @@ class ClothMesh
 {
 public:
     ClothMesh()=default;
-    ClothMesh(size_t _rows, size_t _cols, size_t spacing);
+    ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
+    float getWidth() const;
+    float getHeight() const;
+    size_t getParticleWidth() const;
+    size_t getParticleHeight() const;
+    const std::vector<Particle>& getParticles() const;
+    void draw();
 
 private:
+    float cWidth;
+    float cHeight;
+    size_t pWidth;
+    size_t pHeight;
+    float widthStep;
+    float heightStep;
     std::vector<Particle> particles;
 };
 

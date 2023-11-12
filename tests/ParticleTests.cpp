@@ -27,5 +27,13 @@ TEST(Vec3, ctor)
 
 TEST(ClothMesh, ctor)
 {
-    ClothMesh mesh(8, 10, 5);
+    ClothMesh clothMesh(2.0, 4.0, 10, 20);
+
+    EXPECT_FLOAT_EQ(clothMesh.getWidth(), 2.0f);
+    EXPECT_FLOAT_EQ(clothMesh.getHeight(), 4.0f);
+    EXPECT_EQ(clothMesh.getParticleWidth(), 10);
+    EXPECT_EQ(clothMesh.getParticleHeight(), 20);
+    EXPECT_EQ(clothMesh.getParticles().size(), 10 * 20);
+
+//    clothMesh.draw();
 }
