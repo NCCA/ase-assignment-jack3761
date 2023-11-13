@@ -9,6 +9,7 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
 
     float px=-(cWidth/2.0f);
     float py=-(cHeight/2.0f);
+
     for(size_t y=0; y<pHeight; ++y)
     {
         for(size_t x=0; x<pWidth; ++x)
@@ -22,6 +23,8 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
         }
         px = -(cWidth/2.0f);
         py += heightStep;
+
+
     }
 }
 
@@ -33,13 +36,15 @@ void ClothMesh::draw()
         if (wCount < pWidth)
         {
             std::cout << std::fixed
-            << std::setprecision(2) << (p.pos.x < 0 ? " (" : " ( ")<< p.pos.x << "," << (p.pos.y < 0 ? "" : " ") << p.pos.y << ") *";
+                      << std::setprecision(2) << (p.pos.x <= 0 ? " (" : " ( ")<< p.pos.x << "," << (p.pos.y <= 0 ? "" : " ") << p.pos.y << ") *";
             wCount++;
         }
         else
         {
             std::cout << "\n";
-            wCount = 0;
+            std::cout << std::fixed
+                      << std::setprecision(2) << (p.pos.x <= 0 ? " (" : " ( ")<< p.pos.x << "," << (p.pos.y <= 0 ? "" : " ") << p.pos.y << ") *";
+            wCount = 1;
         }
     }
 
@@ -63,4 +68,14 @@ size_t ClothMesh::getParticleHeight() const {
 
 const std::vector<Particle>& ClothMesh::getParticles() const {
     return particles;
+}
+
+float ClothMesh::getWidthStep() const
+{
+    return widthStep;
+}
+
+float ClothMesh::getHeightStep() const
+{
+    return heightStep;
 }

@@ -31,9 +31,14 @@ TEST(ClothMesh, ctor)
 
     EXPECT_FLOAT_EQ(clothMesh.getWidth(), 2.0f);
     EXPECT_FLOAT_EQ(clothMesh.getHeight(), 4.0f);
+
     EXPECT_EQ(clothMesh.getParticleWidth(), 10);
     EXPECT_EQ(clothMesh.getParticleHeight(), 20);
+
+    EXPECT_FLOAT_EQ(clothMesh.getWidthStep(), 2.0/10.0f);
+    EXPECT_FLOAT_EQ(clothMesh.getHeightStep(), 4.0/20.0f);
+
     EXPECT_EQ(clothMesh.getParticles().size(), 10 * 20);
 
-//    clothMesh.draw();
+    clothMesh.draw();
 }

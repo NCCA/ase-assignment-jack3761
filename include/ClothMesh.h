@@ -14,6 +14,8 @@ public:
     float getHeight() const;
     size_t getParticleWidth() const;
     size_t getParticleHeight() const;
+    float getWidthStep() const;
+    float getHeightStep() const;
     const std::vector<Particle>& getParticles() const;
     void draw();
 
