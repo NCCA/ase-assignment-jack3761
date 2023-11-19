@@ -15,8 +15,8 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
         for(size_t x=0; x<pWidth; ++x)
         {
             Particle p;
-            p.pos.x = px;
-            p.pos.y = py;
+            p.pos[0] = px;
+            p.pos[1] = py;
             particles.push_back(p);
 
             px += widthStep;
@@ -36,14 +36,14 @@ void ClothMesh::draw()
         if (wCount < pWidth)
         {
             std::cout << std::fixed
-                      << std::setprecision(2) << (p.pos.x <= 0 ? " (" : " ( ")<< p.pos.x << "," << (p.pos.y <= 0 ? "" : " ") << p.pos.y << ") *";
+                      << std::setprecision(2) << (p.pos[0] <= 0 ? " (" : " ( ")<< p.pos[0] << "," << (p.pos[1] <= 0 ? "" : " ") << p.pos[1] << "," << (p.pos[2] <= 0 ? "" : " ") << p.pos[2] << ") *";
             wCount++;
         }
         else
         {
             std::cout << "\n";
             std::cout << std::fixed
-                      << std::setprecision(2) << (p.pos.x <= 0 ? " (" : " ( ")<< p.pos.x << "," << (p.pos.y <= 0 ? "" : " ") << p.pos.y << ") *";
+                      << std::setprecision(2) << (p.pos[0] <= 0 ? " (" : " ( ")<< p.pos[0] << "," << (p.pos[1] <= 0 ? "" : " ") << p.pos[1] << "," << (p.pos[2] <= 0 ? "" : " ") << p.pos[2] << ") *";
             wCount = 1;
         }
     }
