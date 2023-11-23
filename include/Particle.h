@@ -7,11 +7,13 @@ class Particle
 {
 public:
     ngl::Vec3 pos;
-    ngl::Vec3 dir;
+    ngl::Vec3 p_pos;
+    ngl::Vec3 v;
     float mass=1.0f;
     Particle() = default;
     Particle(float _x, float _y, float _z);
-    Particle(float _x, float _y, float _z, float _xdir, float _ydir, float _zdir);
+    Particle(float _x, float _y, float _z, float _vx, float _vy, float _vz);
+    void applyForces(float _gravity, ngl::Vec3 _wind, size_t _timeStep);
     void solveConstraints();
     void fixedConstraints();
     void distanceConstraints();
