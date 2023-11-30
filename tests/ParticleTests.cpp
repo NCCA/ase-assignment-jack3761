@@ -6,13 +6,13 @@ TEST(Particle, defCtor)
 {
     Particle p;
 
-    EXPECT_FLOAT_EQ(p.pos[0], 0.0f);
-    EXPECT_FLOAT_EQ(p.pos[1], 0.0f);
-    EXPECT_FLOAT_EQ(p.pos[2], 0.0f);
+    EXPECT_FLOAT_EQ(p.pos.m_x, 0.0f);
+    EXPECT_FLOAT_EQ(p.pos.m_y, 0.0f);
+    EXPECT_FLOAT_EQ(p.pos.m_z, 0.0f);
 
-    EXPECT_FLOAT_EQ(p.v[0], 0.0f);
-    EXPECT_FLOAT_EQ(p.v[1], 0.0f);
-    EXPECT_FLOAT_EQ(p.v[2], 0.0f);
+    EXPECT_FLOAT_EQ(p.v.m_x, 0.0f);
+    EXPECT_FLOAT_EQ(p.v.m_y, 0.0f);
+    EXPECT_FLOAT_EQ(p.v.m_z, 0.0f);
 
     EXPECT_FLOAT_EQ(p.mass, 1.0f);
 }
@@ -21,13 +21,13 @@ TEST(Particle, ctor)
 {
     Particle p(1.0f, 2.0f, 3.0f, 1.0f, 2.0f, 3.0f);
 
-    EXPECT_FLOAT_EQ(p.pos[0], 1.0f);
-    EXPECT_FLOAT_EQ(p.pos[1], 2.0f);
-    EXPECT_FLOAT_EQ(p.pos[2], 3.0f);
+    EXPECT_FLOAT_EQ(p.pos.m_x, 1.0f);
+    EXPECT_FLOAT_EQ(p.pos.m_y, 2.0f);
+    EXPECT_FLOAT_EQ(p.pos.m_z, 3.0f);
 
-    EXPECT_FLOAT_EQ(p.v[0], 1.0f);
-    EXPECT_FLOAT_EQ(p.v[1], 2.0f);
-    EXPECT_FLOAT_EQ(p.v[2], 3.0f);
+    EXPECT_FLOAT_EQ(p.v.m_x, 1.0f);
+    EXPECT_FLOAT_EQ(p.v.m_y, 2.0f);
+    EXPECT_FLOAT_EQ(p.v.m_z, 3.0f);
 
     EXPECT_FLOAT_EQ(p.mass, 1.0f);
 }
@@ -57,14 +57,32 @@ TEST(Particle, applyForces)
 
     p.applyForces(-9.81, {0, 0, 1}, 1);
 
-    EXPECT_FLOAT_EQ(p.v[0], 0.0);
-    EXPECT_FLOAT_EQ(p.v[1], -9.81);
-    EXPECT_FLOAT_EQ(p.v[2], 1.0);
+    EXPECT_FLOAT_EQ(p.v.m_x, 0.0);
+    EXPECT_FLOAT_EQ(p.v.m_y, -9.81);
+    EXPECT_FLOAT_EQ(p.v.m_z, 1.0);
 
 
-    EXPECT_FLOAT_EQ(p.p_pos[0], 1.0);
-    EXPECT_FLOAT_EQ(p.p_pos[1], -8.81);
-    EXPECT_FLOAT_EQ(p.p_pos[2], 1.0);
+    EXPECT_FLOAT_EQ(p.p_pos.m_x, 1.0);
+    EXPECT_FLOAT_EQ(p.p_pos.m_y, -8.81);
+    EXPECT_FLOAT_EQ(p.p_pos.m_z, 1.0);
 }
+
+TEST(Particle, applyFixedConstraint)
+{
+    Particle p(1.0, 1.0, 0.0);
+    p.applyForces(-9.81, {0, 0, 1}, 1);
+    p.applyFixedConstraint();
+
+    EXPECT_FLOAT_EQ(p.v.m_x, 0.0);
+    EXPECT_FLOAT_EQ(p.v.m_y, -9.81);
+    EXPECT_FLOAT_EQ(p.v.m_z, 1.0);
+
+
+    EXPECT_FLOAT_EQ(p.p_pos.m_x, 1.0);
+    EXPECT_FLOAT_EQ(p.p_pos.m_y, 1.0);
+    EXPECT_FLOAT_EQ(p.p_pos.m_z, 0.0);
+}
+
+
 
 

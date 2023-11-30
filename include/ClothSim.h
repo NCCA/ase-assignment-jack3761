@@ -16,7 +16,7 @@ public:
     float getGravity() const;
     ngl::Vec3 getWind() const;
     size_t getTimeStep() const;
-    size_t getDuration() const;
+    size_t getIterations() const;
     void setGravity(float _gravity);
     void setWind(ngl::Vec3 _wind);
     ClothMesh mesh;
@@ -25,7 +25,7 @@ private:
     float gravity = -9.81f;
     ngl::Vec3 wind = {0.0, 0.0, 1.0};
     size_t timeStep = 1;
-    size_t simDuration = 100;
+    size_t simIterations = 600;
 };
 
 #endif

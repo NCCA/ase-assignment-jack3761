@@ -6,11 +6,11 @@ TEST(ClothSim, defCtor)
     ClothSim sim;
 
     EXPECT_FLOAT_EQ(sim.getGravity(), -9.81f);
-    EXPECT_FLOAT_EQ(sim.getWind()[0], 0.0f);
-    EXPECT_FLOAT_EQ(sim.getWind()[1], 0.0f);
-    EXPECT_FLOAT_EQ(sim.getWind()[2], 1.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_x, 0.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_y, 0.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_z, 1.0f);
     EXPECT_FLOAT_EQ(sim.getTimeStep(), 1);
-    EXPECT_FLOAT_EQ(sim.getDuration(), 100);
+    EXPECT_FLOAT_EQ(sim.getIterations(), 600);
 }
 
 TEST(ClothSim, simParamCtor)
@@ -18,11 +18,11 @@ TEST(ClothSim, simParamCtor)
     ClothSim sim(9.81f, {2.0f, 3.0f, 4.0f}, 4, 50);
 
     EXPECT_FLOAT_EQ(sim.getGravity(), 9.81f);
-    EXPECT_FLOAT_EQ(sim.getWind()[0], 2.0f);
-    EXPECT_FLOAT_EQ(sim.getWind()[1], 3.0f);
-    EXPECT_FLOAT_EQ(sim.getWind()[2], 4.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_x, 2.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_y, 3.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_z, 4.0f);
     EXPECT_FLOAT_EQ(sim.getTimeStep(), 4);
-    EXPECT_FLOAT_EQ(sim.getDuration(), 50);
+    EXPECT_FLOAT_EQ(sim.getIterations(), 50);
 }
 
 TEST(ClothSim, simMeshCtor)
@@ -46,11 +46,11 @@ TEST(ClothSim, longCtor)
     ClothSim sim(9.81f, {2.0f, 3.0f, 4.0f}, 4, 50, 4.0, 2.0, 20, 10);
 
     EXPECT_FLOAT_EQ(sim.getGravity(), 9.81f);
-    EXPECT_FLOAT_EQ(sim.getWind()[0], 2.0f);
-    EXPECT_FLOAT_EQ(sim.getWind()[1], 3.0f);
-    EXPECT_FLOAT_EQ(sim.getWind()[2], 4.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_x, 2.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_y, 3.0f);
+    EXPECT_FLOAT_EQ(sim.getWind().m_z, 4.0f);
     EXPECT_FLOAT_EQ(sim.getTimeStep(), 4);
-    EXPECT_FLOAT_EQ(sim.getDuration(), 50);
+    EXPECT_FLOAT_EQ(sim.getIterations(), 50);
 
     EXPECT_FLOAT_EQ(sim.mesh.getWidth(), 4.0f);
     EXPECT_FLOAT_EQ(sim.mesh.getHeight(), 2.0f);

@@ -17,4 +17,10 @@ void Particle::applyForces(float _gravity, ngl::Vec3 _wind, size_t _timeStep)
     p_pos += v * _timeStep;
 }
 
+void Particle::applyFixedConstraint()
+{
+    ngl::Vec3 dt = pos - p_pos;
+    p_pos += dt;
+}
+
 
