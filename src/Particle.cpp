@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iomanip>
 #include "Particle.h"
 
 Particle::Particle(float _x, float _y, float _z)
@@ -22,5 +24,13 @@ void Particle::applyFixedConstraint()
     ngl::Vec3 dt = pos - p_pos;
     p_pos += dt;
 }
+
+void Particle::draw()
+{
+    std::cout << std::fixed
+              << std::setprecision(2) << (pos.m_x <= 0 ? " (" : " ( ")<< pos.m_x << "," << (pos.m_y <= 0 ? "" : " ") << pos.m_y << "," << (pos.m_z <= 0 ? "" : " ") << pos.m_z << ")\n";
+
+}
+
 
 

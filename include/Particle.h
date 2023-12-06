@@ -9,6 +9,7 @@ public:
     ngl::Vec3 pos;
     ngl::Vec3 p_pos;
     ngl::Vec3 v;
+    std::vector<Particle*> neighbours;
     bool isFixed=false;
     float mass=1.0f;
     Particle() = default;
@@ -18,7 +19,7 @@ public:
     void solveConstraints();
     void applyFixedConstraint();
     void distanceConstraints();
-    std::vector<Particle> findNeighbours();
+    void draw();
 };
 
 

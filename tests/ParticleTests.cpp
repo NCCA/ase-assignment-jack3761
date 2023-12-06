@@ -10,11 +10,17 @@ TEST(Particle, defCtor)
     EXPECT_FLOAT_EQ(p.pos.m_y, 0.0f);
     EXPECT_FLOAT_EQ(p.pos.m_z, 0.0f);
 
+    EXPECT_FLOAT_EQ(p.p_pos.m_x, 0.0f);
+    EXPECT_FLOAT_EQ(p.p_pos.m_y, 0.0f);
+    EXPECT_FLOAT_EQ(p.p_pos.m_z, 0.0f);
+
     EXPECT_FLOAT_EQ(p.v.m_x, 0.0f);
     EXPECT_FLOAT_EQ(p.v.m_y, 0.0f);
     EXPECT_FLOAT_EQ(p.v.m_z, 0.0f);
 
     EXPECT_FLOAT_EQ(p.mass, 1.0f);
+
+    EXPECT_FLOAT_EQ(p.isFixed, false);
 }
 
 TEST(Particle, ctor)
@@ -25,11 +31,18 @@ TEST(Particle, ctor)
     EXPECT_FLOAT_EQ(p.pos.m_y, 2.0f);
     EXPECT_FLOAT_EQ(p.pos.m_z, 3.0f);
 
+    EXPECT_FLOAT_EQ(p.p_pos.m_x, 1.0f);
+    EXPECT_FLOAT_EQ(p.p_pos.m_y, 2.0f);
+    EXPECT_FLOAT_EQ(p.p_pos.m_z, 3.0f);
+
     EXPECT_FLOAT_EQ(p.v.m_x, 1.0f);
     EXPECT_FLOAT_EQ(p.v.m_y, 2.0f);
     EXPECT_FLOAT_EQ(p.v.m_z, 3.0f);
 
     EXPECT_FLOAT_EQ(p.mass, 1.0f);
+
+    EXPECT_FLOAT_EQ(p.isFixed, false);
+
 }
 
 
@@ -49,6 +62,26 @@ TEST(ClothMesh, ctor)
     EXPECT_EQ(clothMesh.getParticles().size(), 10 * 20);
 
 //    clothMesh.draw();
+}
+
+TEST(ClothMesh, findNeighbours)
+{
+    ClothMesh clothMesh(3.0, 3.0, 3, 3);
+
+    Particle *p = &clothMesh.getParticle(1,1);
+
+    p->draw();
+
+    clothMesh.findNeighbours(p, 1, 1);
+
+    EXPECT_EQ(&clothMesh.getParticle(0,1), p->neighbours[0]);
+    EXPECT_EQ(&clothMesh.getParticle(2,1), p->neighbours[1]);
+    EXPECT_EQ(&clothMesh.getParticle(1,2), p->neighbours[2]);
+    EXPECT_EQ(&clothMesh.getParticle(1,0), p->neighbours[3]);
+
+    EXPECT_EQ(4, p->neighbours.size());
+
+    clothMesh.draw();
 }
 
 TEST(Particle, applyForces)

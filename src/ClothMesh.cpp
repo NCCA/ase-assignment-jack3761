@@ -7,12 +7,12 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
     widthStep = cWidth / static_cast<float>(pWidth);
     heightStep = cHeight / static_cast<float>(pHeight);
 
-    float px=-(cWidth*0.5f);
-    float py=-(cHeight*0.5f);
+    float px = -(cWidth * 0.5f) + widthStep * 0.5f;
+    float py = -(cHeight * 0.5f) + heightStep * 0.5f;
 
-    for(size_t y=0; y<pHeight; ++y)
+    for (size_t y = 0; y < pHeight; ++y)
     {
-        for(size_t x=0; x<pWidth; ++x)
+        for (size_t x = 0; x < pWidth; ++x)
         {
             Particle p;
             p.pos.m_x = px;
@@ -21,14 +21,24 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
 
             px += widthStep;
         }
-        px = -(cWidth/2.0f);
+        px = -(cWidth / 2.0f) + widthStep * 0.5f;
         py += heightStep;
     }
+
+}
+
+void ClothMesh::findNeighbours(Particle *_p, size_t _x, size_t _y)
+{
+    if (_x > 0) _p->neighbours.push_back(&particles[(_x-1) + _y * pWidth]); //left
+    if (_x < pWidth -1) _p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]); //right
+    if (_y < pHeight -1) _p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]); //above
+    if (_y > 0) _p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]); //below
 }
 
 void ClothMesh::draw()
 {
     size_t wCount = 0;
+
     for (Particle p : particles)
     {
         if (wCount < pWidth)
@@ -64,9 +74,22 @@ size_t ClothMesh::getParticleHeight() const {
     return pHeight;
 }
 
-const std::vector<Particle>& ClothMesh::getParticles() const {
+std::vector<Particle>& ClothMesh::getParticles() {
     return particles;
 }
+
+
+Particle& ClothMesh::getParticle(size_t _index)
+{
+    return particles[_index];
+}
+
+Particle& ClothMesh::getParticle(size_t _x, size_t _y)
+{
+    size_t index = _x + _y * pWidth;
+    return getParticle(index);
+}
+
 
 float ClothMesh::getWidthStep() const
 {
