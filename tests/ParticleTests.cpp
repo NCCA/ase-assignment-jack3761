@@ -61,7 +61,8 @@ TEST(ClothMesh, ctor)
 
     EXPECT_EQ(clothMesh.getParticles().size(), 10 * 20);
 
-//    clothMesh.draw();
+    clothMesh.draw();
+    std::cout<<"\n\n"<<clothMesh.getWidthStep()<<"   "<<clothMesh.getHeightStep()<<"\n";
 }
 
 TEST(ClothMesh, find4Neighbours)

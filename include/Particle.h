@@ -9,6 +9,7 @@ public:
     ngl::Vec3 pos; // actual position
     ngl::Vec3 p_pos; // proposed position
     ngl::Vec3 v; // velocity
+    ngl::Vec3 a; // accumulator
     std::vector<Particle*> neighbours; // neighbouring particles
     bool isFixed=false;
     float mass=1.0f;
@@ -18,7 +19,7 @@ public:
     void applyForces(float _gravity, ngl::Vec3 _wind, size_t _timeStep);
     void solveConstraints();
     void applyFixedConstraint();
-    void distanceConstraints();
+    void applyDistanceConstraint();
     void draw();
 };
 

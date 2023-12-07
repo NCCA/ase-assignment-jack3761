@@ -16,10 +16,11 @@ public:
     size_t getParticleHeight() const;
     float getWidthStep() const;
     float getHeightStep() const;
+    size_t numParticles;
     std::vector<Particle>& getParticles();
     Particle& getParticle(size_t _index);
     Particle& getParticle(size_t _x, size_t _y);
-        void findNeighbours(size_t _x, size_t _y);
+    void findNeighbours(size_t _x, size_t _y);
     void draw();
 
 private:

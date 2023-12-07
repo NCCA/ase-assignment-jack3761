@@ -1,6 +1,6 @@
 #include "ClothSim.h"
 
-ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, simIterations{_simDuration}
+ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, solveIterations{_simDuration}
 {}
 
 ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
@@ -16,28 +16,32 @@ ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _si
 
 void ClothSim::runSim()
 {
-    // to be changed to run indefinitely
-    for (size_t i=0; i <= simIterations; ++i)
-    {
-        // calculate external forces for each particle
-        for (Particle p : mesh.getParticles())
+        // initialise sim
+        for (size_t i=0; i<mesh.getParticleWidth(); ++i)
         {
-            p.applyForces(gravity, wind, timeStep);
-            if (p.isFixed) {p.applyFixedConstraint();}
+            for (size_t j = 0; j < mesh.getParticleHeight(); ++j)
+            {
+                mesh.findNeighbours(i,j);
+                mesh.getParticle(i,j).applyForces(gravity, wind, timeStep);
+            }
         }
 
-        // find neighbours for each particle
-
-        // apply constraints for each particle
-        // start with fixed constraints - top right and left corner to begin
+        // apply constraints for each particle with particle centric approach
         // solve distance constraints
+        for (size_t i=0; i<mesh.getParticles().size(); ++i)
+        {
+            Particle *p = &mesh.getParticle(i);
+            p->a = ngl::Vec3{0.0f, 0.0f, 0.0f};
+            p->applyDistanceConstraint();
+
+            if (p->isFixed) { p->applyFixedConstraint(); }
+        }
 
         // set solved particle positions
 
         // visualise with ngl
 
         // visualise within gui
-    }
 }
 
 float ClothSim::getGravity() const
@@ -57,7 +61,7 @@ size_t ClothSim::getTimeStep() const
 
 size_t ClothSim::getIterations() const
 {
-    return simIterations;
+    return solveIterations;
 }
 
 void ClothSim::setGravity(float _gravity)

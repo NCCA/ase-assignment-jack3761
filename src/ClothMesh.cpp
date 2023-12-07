@@ -25,6 +25,9 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
         py += heightStep;
     }
 
+    numParticles = particles.size();
+
+
 }
 
 void ClothMesh::findNeighbours(size_t _x, size_t _y)

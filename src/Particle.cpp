@@ -21,15 +21,20 @@ void Particle::applyForces(float _gravity, ngl::Vec3 _wind, size_t _timeStep)
 
 void Particle::applyFixedConstraint()
 {
+    // TODO change to use accumulator
     ngl::Vec3 dt = pos - p_pos;
     p_pos += dt;
+}
+
+void Particle::applyDistanceConstraint()
+{
+
 }
 
 void Particle::draw()
 {
     std::cout << std::fixed
               << std::setprecision(2) << (pos.m_x <= 0 ? " (" : " ( ")<< pos.m_x << "," << (pos.m_y <= 0 ? "" : " ") << pos.m_y << "," << (pos.m_z <= 0 ? "" : " ") << pos.m_z << ")\n";
-
 }
 
 

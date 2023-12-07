@@ -25,7 +25,9 @@ private:
     float gravity = -9.81f;
     ngl::Vec3 wind = {0.0, 0.0, 1.0};
     size_t timeStep = 1;
-    size_t simIterations = 600;
+    size_t solveIterations = 600;
+    size_t numParticles;
+
 };
 
 #endif
