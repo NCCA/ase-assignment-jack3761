@@ -64,25 +64,52 @@ TEST(ClothMesh, ctor)
 //    clothMesh.draw();
 }
 
-TEST(ClothMesh, findNeighbours)
+TEST(ClothMesh, find4Neighbours)
 {
     ClothMesh clothMesh(3.0, 3.0, 3, 3);
 
     Particle *p = &clothMesh.getParticle(1,1);
 
-    p->draw();
+    clothMesh.findNeighbours(1, 1);
 
-    clothMesh.findNeighbours(p, 1, 1);
+    EXPECT_EQ(4, p->neighbours.size());
+
 
     EXPECT_EQ(&clothMesh.getParticle(0,1), p->neighbours[0]);
     EXPECT_EQ(&clothMesh.getParticle(2,1), p->neighbours[1]);
     EXPECT_EQ(&clothMesh.getParticle(1,2), p->neighbours[2]);
     EXPECT_EQ(&clothMesh.getParticle(1,0), p->neighbours[3]);
-
-    EXPECT_EQ(4, p->neighbours.size());
-
-    clothMesh.draw();
 }
+
+TEST(ClothMesh, find3Neighbours)
+{
+    ClothMesh clothMesh(3.0, 3.0, 3, 3);
+
+    Particle *p = &clothMesh.getParticle(0,1);
+
+    clothMesh.findNeighbours(0, 1);
+
+    EXPECT_EQ(3, p->neighbours.size());
+
+    EXPECT_EQ(&clothMesh.getParticle(1,1), p->neighbours[0]);
+    EXPECT_EQ(&clothMesh.getParticle(0,2), p->neighbours[1]);
+    EXPECT_EQ(&clothMesh.getParticle(0,0), p->neighbours[2]);
+}
+
+TEST(ClothMesh, find2Neighbours)
+{
+    ClothMesh clothMesh(3.0, 3.0, 3, 3);
+
+    Particle *p = &clothMesh.getParticle(0,0);
+
+    clothMesh.findNeighbours(0, 0);
+
+    EXPECT_EQ(2, p->neighbours.size());
+
+    EXPECT_EQ(&clothMesh.getParticle(1,0), p->neighbours[0]);
+    EXPECT_EQ(&clothMesh.getParticle(0,1), p->neighbours[1]);
+}
+
 
 TEST(Particle, applyForces)
 {

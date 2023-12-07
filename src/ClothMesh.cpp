@@ -27,12 +27,13 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
 
 }
 
-void ClothMesh::findNeighbours(Particle *_p, size_t _x, size_t _y)
+void ClothMesh::findNeighbours(size_t _x, size_t _y)
 {
-    if (_x > 0) _p->neighbours.push_back(&particles[(_x-1) + _y * pWidth]); //left
-    if (_x < pWidth -1) _p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]); //right
-    if (_y < pHeight -1) _p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]); //above
-    if (_y > 0) _p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]); //below
+    Particle *p = &getParticle(_x, _y);
+    if (_x > 0) p->neighbours.push_back(&particles[(_x-1) + _y * pWidth]); //left
+    if (_x < pWidth -1) p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]); //right
+    if (_y < pHeight -1) p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]); //above
+    if (_y > 0) p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]); //below
 }
 
 void ClothMesh::draw()

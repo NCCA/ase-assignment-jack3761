@@ -6,10 +6,10 @@
 class Particle
 {
 public:
-    ngl::Vec3 pos;
-    ngl::Vec3 p_pos;
-    ngl::Vec3 v;
-    std::vector<Particle*> neighbours;
+    ngl::Vec3 pos; // actual position
+    ngl::Vec3 p_pos; // proposed position
+    ngl::Vec3 v; // velocity
+    std::vector<Particle*> neighbours; // neighbouring particles
     bool isFixed=false;
     float mass=1.0f;
     Particle() = default;

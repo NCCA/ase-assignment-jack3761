@@ -19,7 +19,7 @@ public:
     std::vector<Particle>& getParticles();
     Particle& getParticle(size_t _index);
     Particle& getParticle(size_t _x, size_t _y);
-        void findNeighbours(Particle *_p, size_t _x, size_t _y);
+        void findNeighbours(size_t _x, size_t _y);
     void draw();
 
 private:
