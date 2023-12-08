@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <ngl/AbstractVAO.h>
 #include "Particle.h"
 
 class ClothMesh
@@ -22,6 +23,7 @@ public:
     Particle& getParticle(size_t _x, size_t _y);
     void findNeighbours(size_t _x, size_t _y);
     void draw();
+    void drawGL();
 
 private:
     float cWidth;
@@ -31,6 +33,8 @@ private:
     float widthStep;
     float heightStep;
     std::vector<Particle> particles;
+    std::unique_ptr<ngl::AbstractVAO> m_vao;
+
 };
 
 #endif

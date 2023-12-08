@@ -9,7 +9,19 @@ project(ClothSim_build)
 
 find_package(NGL CONFIG REQUIRED)
 
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt6 COMPONENTS OpenGL Widgets QUIET )
+if ( Qt6_FOUND )
+    message("Found Qt6 Using that")
+else()
+    message("Found Qt5 Using that")
+    find_package(Qt5 COMPONENTS OpenGL Widgets REQUIRED)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 set(ExName ClothSim)
 add_executable(${ExName}
@@ -18,13 +30,23 @@ add_executable(${ExName}
         src/ClothMesh.cpp
         src/Particle.cpp
         src/Constraint.cpp
+        src/NGLScene.cpp
+        src/NGLSceneMouseControls.cpp
         include/ClothSim.h
         include/ClothMesh.h
         include/Particle.h
         include/Constraint.h
+        include/NGLScene.h
 )
 target_include_directories(${ExName} PRIVATE include $ENV{HOME}/NGL/include)
-target_link_libraries(${ExName} PRIVATE NGL)
+target_link_libraries(${ExName} PRIVATE Qt::Widgets Qt::OpenGL NGL)
+
+
+add_custom_target(${ExName}CopyShaders ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/shaders
+        $<TARGET_FILE_DIR:${ExName}>/shaders
+)
 
 ### Testing Code
 find_package(GTest CONFIG REQUIRED)

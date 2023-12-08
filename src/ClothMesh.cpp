@@ -1,5 +1,7 @@
 #include "ClothMesh.h"
 #include <iomanip>
+#include <ngl/VAOFactory.h>
+
 
 
 ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
@@ -27,7 +29,20 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
 
     numParticles = particles.size();
 
+    m_vao = ngl::VAOFactory::createVAO(ngl::simpleVAO, GL_POINTS);
+}
 
+void ClothMesh::drawGL()
+{
+    glPointSize(4.0);
+    m_vao->bind();
+    m_vao->setData(ngl::AbstractVAO::VertexData(particles.size()*sizeof(Particle), particles[0].pos.m_x));
+    m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof(Particle), 0);
+    m_vao->setVertexAttributePointer(1,3, GL_FLOAT, sizeof(Particle), 6);
+
+    m_vao->setNumIndices(particles.size());
+    m_vao->draw();
+    m_vao->unbind();
 }
 
 void ClothMesh::findNeighbours(size_t _x, size_t _y)
