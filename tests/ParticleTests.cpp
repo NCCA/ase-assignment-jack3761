@@ -116,7 +116,7 @@ TEST(Particle, applyForces)
 {
     Particle p(1.0, 1.0, 0.0);
 
-    p.applyForces(-9.81, {0, 0, 1}, 1);
+    p.applyExternalForces(-9.81, {0, 0, 1}, 1);
 
     EXPECT_FLOAT_EQ(p.v.m_x, 0.0);
     EXPECT_FLOAT_EQ(p.v.m_y, -9.81);
@@ -131,7 +131,7 @@ TEST(Particle, applyForces)
 TEST(Particle, applyFixedConstraint)
 {
     Particle p(1.0, 1.0, 0.0);
-    p.applyForces(-9.81, {0, 0, 1}, 1);
+    p.applyExternalForces(-9.81, {0, 0, 1}, 1);
     p.applyFixedConstraint();
 
     EXPECT_FLOAT_EQ(p.v.m_x, 0.0);

@@ -41,13 +41,13 @@ void NGLScene::initializeGL()
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
 
-  m_sim = std::make_unique<ClothSim>(9.81f, ngl::Vec3{1.0f, 0.0f, 0.0f}, 1, 600, 10.0, 20.0, 20, 40);
+  m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{1.0f, 0.0f, 0.0f}, 1, 600, 10.0, 20.0, 20, 40);
 
   ngl::ShaderLib::loadShader("ParticleShader", "shaders/ParticleVertex.glsl", "shaders/ParticleFragment.glsl");
   ngl::ShaderLib::use("ParticleShader");
   m_view = ngl::lookAt({0,24,24}, {0,0,0}, {0,1,0});
   ngl::ShaderLib::setUniform("MVP", m_project * m_view);
-//  startTimer(10);
+  startTimer(10);
 
 //  ngl::VAOPrimitives::createLineGrid("floor", 40,40,10);
 
@@ -73,11 +73,12 @@ void NGLScene::paintGL()
   ngl::ShaderLib::setUniform("MVP", m_project*m_view*mouseRotation);
 
   m_sim->mesh.drawGL();
+//  std::cout<<"drawing\n";
 
   ngl::ShaderLib::use(ngl::nglColourShader);
   ngl::ShaderLib::setUniform("Colour", 1.0f, 0.0f, 1.0f, 1.0f);
   ngl::ShaderLib::setUniform("MVP", m_project*m_view*mouseRotation);
-  ngl::VAOPrimitives::draw("floor");
+//  ngl::VAOPrimitives::draw("floor");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -96,6 +97,9 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
       m_modelPos.set(ngl::Vec3::zero());
 
   break;
+      case Qt::Key_S:
+          m_sim->runSim(0.1);
+          break;
   default : break;
   }
   // finally update the GLWindow and re-draw
@@ -108,4 +112,6 @@ void NGLScene::timerEvent(QTimerEvent *_event)
     auto now = std::chrono::steady_clock::now();
     auto delta = std::chrono::duration<float, std::chrono::seconds::period>(now-m_previousTime).count();
     m_previousTime = now;
+//    m_sim->runSim(delta);
+    update();
 }

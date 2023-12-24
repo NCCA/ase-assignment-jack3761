@@ -13,10 +13,10 @@ Particle::Particle(float _x, float _y, float _z, float _vx, float _vy, float _vz
     v = ngl::Vec3(_vx, _vy, _vz);
 }
 
-void Particle::applyForces(float _gravity, ngl::Vec3 _wind, size_t _timeStep)
+void Particle::applyExternalForces(float _gravity, ngl::Vec3 _wind, float _timeStep)
 {
     v += ngl::Vec3{0, _gravity, 0} * _timeStep + _wind * _timeStep;
-    p_pos += v * _timeStep;
+    p_pos += v;//* _timeStep;
 }
 
 void Particle::applyFixedConstraint()

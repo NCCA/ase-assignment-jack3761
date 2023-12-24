@@ -1,5 +1,5 @@
 #include "ClothSim.h"
-
+// test comment
 ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, solveIterations{_simDuration}
 {}
 
@@ -14,34 +14,37 @@ ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _si
     mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 }
 
-void ClothSim::runSim()
+void ClothSim::runSim(float _delta)
 {
-        // initialise sim
-        for (size_t i=0; i<mesh.getParticleWidth(); ++i)
+    // initialise sim
+    for (size_t i=0; i<mesh.getParticleWidth(); ++i)
+    {
+        for (size_t j = 0; j < mesh.getParticleHeight(); ++j)
         {
-            for (size_t j = 0; j < mesh.getParticleHeight(); ++j)
-            {
-                mesh.findNeighbours(i,j);
-                mesh.getParticle(i,j).applyForces(gravity, wind, timeStep);
-            }
+            mesh.findNeighbours(i,j);
+            mesh.getParticle(i, j).applyExternalForces(gravity, wind, _delta);
         }
+    }
 
-        // apply constraints for each particle with particle centric approach
-        // solve distance constraints
-        for (size_t i=0; i<mesh.getParticles().size(); ++i)
-        {
-            Particle *p = &mesh.getParticle(i);
-            p->a = ngl::Vec3{0.0f, 0.0f, 0.0f};
-            p->applyDistanceConstraint();
+    // apply constraints for each particle with particle centric approach
+    // solve distance constraints
+//    for (size_t i=0; i<mesh.getParticles().size(); ++i)
+//    {
+//        Particle *p = &mesh.getParticle(i);
+//        p->a = ngl::Vec3{0.0f, 0.0f, 0.0f};
+//        p->applyDistanceConstraint();
+//
+//        if (p->isFixed) { p->applyFixedConstraint(); }
+//    }
 
-            if (p->isFixed) { p->applyFixedConstraint(); }
-        }
 
-        // set solved particle positions
+    // set solved particle positions
+    mesh.setPositions();
 
-        // visualise with ngl
+    // visualise with ngl
+//    mesh.drawGL();
 
-        // visualise within gui
+    // visualise within gui
 }
 
 float ClothSim::getGravity() const

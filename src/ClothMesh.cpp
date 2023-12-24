@@ -38,11 +38,12 @@ void ClothMesh::drawGL()
     m_vao->bind();
     m_vao->setData(ngl::AbstractVAO::VertexData(particles.size()*sizeof(Particle), particles[0].pos.m_x));
     m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof(Particle), 0);
-    m_vao->setVertexAttributePointer(1,3, GL_FLOAT, sizeof(Particle), 6);
 
     m_vao->setNumIndices(particles.size());
     m_vao->draw();
     m_vao->unbind();
+
+    std::cout<<"drawGL\n";
 }
 
 void ClothMesh::findNeighbours(size_t _x, size_t _y)
@@ -52,6 +53,15 @@ void ClothMesh::findNeighbours(size_t _x, size_t _y)
     if (_x < pWidth -1) p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]); //right
     if (_y < pHeight -1) p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]); //above
     if (_y > 0) p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]); //below
+}
+
+void ClothMesh::setPositions()
+{
+    for (Particle &p : particles)
+    {
+        p.pos = p.p_pos;
+//        p.draw();
+    }
 }
 
 void ClothMesh::draw()

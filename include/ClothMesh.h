@@ -21,6 +21,7 @@ public:
     std::vector<Particle>& getParticles();
     Particle& getParticle(size_t _index);
     Particle& getParticle(size_t _x, size_t _y);
+    void setPositions();
     void findNeighbours(size_t _x, size_t _y);
     void draw();
     void drawGL();
