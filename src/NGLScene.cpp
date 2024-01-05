@@ -12,16 +12,13 @@ NGLScene::NGLScene()
 {
   // re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
   setTitle("Blank NGL");
-  timer = new QTimer(this); // Initialize the timer
-  connect(timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
-  timer->start(10);
+  startTimer(10);
 }
 
 
 NGLScene::~NGLScene()
 {
   std::cout<<"Shutting down NGL, removing VAO's and Shaders\n";
-  delete timer;
 }
 
 
@@ -103,14 +100,14 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
   break;
   case Qt::Key_Space :
       std::cout << "space pressed\n";
-      if (timer->isActive()) {
-          timer->stop();
+      if (!m_animate)
+      {
+          m_animate = true;
       }
-      else {
-          timer->start(10);
+      else
+      {
+          m_animate = false();
       }
-
-      break;
   case Qt::Key_S:
           m_sim->runSim(0.01);
           break;
@@ -126,6 +123,9 @@ void NGLScene::timerEvent(QTimerEvent *_event)
     auto now = std::chrono::steady_clock::now();
     auto delta = std::chrono::duration<float, std::chrono::seconds::period>(now-m_previousTime).count();
     m_previousTime = now;
-    m_sim->runSim(delta);
+    if (m_animate)
+    {
+        m_sim->runSim(delta);
+    }
     update();
 }

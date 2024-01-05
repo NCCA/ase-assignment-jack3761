@@ -92,8 +92,7 @@ private:
     ngl::Mat4 m_project;
     std::chrono::steady_clock::time_point m_previousTime;
     int timerId = 0;
-    bool play = false;
-    QTimer* timer = new QTimer(this);
+    bool m_animate = false;
 };
 
 
