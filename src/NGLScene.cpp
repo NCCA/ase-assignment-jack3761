@@ -12,12 +12,16 @@ NGLScene::NGLScene()
 {
   // re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
   setTitle("Blank NGL");
+  timer = new QTimer(this); // Initialize the timer
+  connect(timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
+  timer->start(10);
 }
 
 
 NGLScene::~NGLScene()
 {
   std::cout<<"Shutting down NGL, removing VAO's and Shaders\n";
+  delete timer;
 }
 
 
@@ -41,15 +45,15 @@ void NGLScene::initializeGL()
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
 
-  m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{1.0f, 0.0f, 0.0f}, 1, 600, 10.0, 20.0, 20, 40);
+  m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{0.0f, 0.0f, 1.0f}, 1, 600, 10.0, 20.0, 20, 40);
+  m_sim->initialise();
 
   ngl::ShaderLib::loadShader("ParticleShader", "shaders/ParticleVertex.glsl", "shaders/ParticleFragment.glsl");
   ngl::ShaderLib::use("ParticleShader");
   m_view = ngl::lookAt({0,24,24}, {0,0,0}, {0,1,0});
   ngl::ShaderLib::setUniform("MVP", m_project * m_view);
-  startTimer(10);
+  //startTimer(10);
 
-//  ngl::VAOPrimitives::createLineGrid("floor", 40,40,10);
 
   m_previousTime = std::chrono::steady_clock::now();
 }
@@ -91,14 +95,24 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
   {
   // escape key to quite
   case Qt::Key_Escape : QGuiApplication::exit(EXIT_SUCCESS); break;
-  case Qt::Key_Space :
+  case Qt::Key_Enter :
       m_win.spinXFace=0;
       m_win.spinYFace=0;
       m_modelPos.set(ngl::Vec3::zero());
 
   break;
-      case Qt::Key_S:
-          m_sim->runSim(0.1);
+  case Qt::Key_Space :
+      std::cout << "space pressed\n";
+      if (timer->isActive()) {
+          timer->stop();
+      }
+      else {
+          timer->start(10);
+      }
+
+      break;
+  case Qt::Key_S:
+          m_sim->runSim(0.01);
           break;
   default : break;
   }
@@ -112,6 +126,6 @@ void NGLScene::timerEvent(QTimerEvent *_event)
     auto now = std::chrono::steady_clock::now();
     auto delta = std::chrono::duration<float, std::chrono::seconds::period>(now-m_previousTime).count();
     m_previousTime = now;
-//    m_sim->runSim(delta);
+    m_sim->runSim(delta);
     update();
 }

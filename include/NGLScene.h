@@ -9,6 +9,7 @@
 #include <ngl/Mat4.h>
 #include <chrono>
 #include "ClothSim.h"
+#include <QTimer>
 
 //----------------------------------------------------------------------------------------------------------------------
 /// @file NGLScene.h
@@ -90,6 +91,9 @@ private:
     ngl::Mat4 m_view;
     ngl::Mat4 m_project;
     std::chrono::steady_clock::time_point m_previousTime;
+    int timerId = 0;
+    bool play = false;
+    QTimer* timer = new QTimer(this);
 };
 
 

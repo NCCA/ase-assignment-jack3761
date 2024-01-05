@@ -1,5 +1,5 @@
 #include "ClothSim.h"
-// test comment
+
 ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, solveIterations{_simDuration}
 {}
 
@@ -16,35 +16,45 @@ ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _si
 
 void ClothSim::runSim(float _delta)
 {
-    // initialise sim
-    for (size_t i=0; i<mesh.getParticleWidth(); ++i)
-    {
-        for (size_t j = 0; j < mesh.getParticleHeight(); ++j)
-        {
-            mesh.findNeighbours(i,j);
-            mesh.getParticle(i, j).applyExternalForces(gravity, wind, _delta);
-        }
-    }
+    mesh.applyExternalForces(gravity, wind, _delta);
 
     // apply constraints for each particle with particle centric approach
-    // solve distance constraints
-//    for (size_t i=0; i<mesh.getParticles().size(); ++i)
-//    {
-//        Particle *p = &mesh.getParticle(i);
-//        p->a = ngl::Vec3{0.0f, 0.0f, 0.0f};
-//        p->applyDistanceConstraint();
-//
-//        if (p->isFixed) { p->applyFixedConstraint(); }
-//    }
+    for (size_t i = 0; i < solveIterations; ++i)
+    {
+        for (size_t j = 0; j < mesh.getParticles().size(); ++j)
+        {
+            Particle* p = &mesh.getParticle(j);
+            p->a = ngl::Vec3{ 0.0f, 0.0f, 0.0f };
+
+            // apply  constraints
+            if (p->isFixed) { mesh.applyFixedConstraint(*p); }
+            else
+            {
+                mesh.applyDistanceConstraint(*p);
+            }
+        }
+    }
 
 
     // set solved particle positions
     mesh.setPositions();
 
     // visualise with ngl
-//    mesh.drawGL();
 
     // visualise within gui
+}
+
+void ClothSim::initialise()
+{
+    for (size_t i = 0; i < mesh.getParticleWidth(); ++i)
+    {
+        for (size_t j = 0; j < mesh.getParticleHeight(); ++j)
+        {
+            mesh.findNeighbours(i, j);
+        }
+    }
+    mesh.getParticle(mesh.getParticleWidth() - 1, mesh.getParticleHeight()-1).isFixed = true;
+    mesh.getParticle(0, mesh.getParticleHeight() - 1).isFixed = true;
 }
 
 float ClothSim::getGravity() const

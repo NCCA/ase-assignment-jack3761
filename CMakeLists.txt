@@ -46,7 +46,9 @@ add_custom_target(${ExName}CopyShaders ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         $<TARGET_FILE_DIR:${ExName}>/shaders
+        COMMENT "Copying shaders to target directory"
 )
+add_dependencies(${ExName} ${ExName}CopyShaders)
 
 ### Testing Code
 find_package(GTest CONFIG REQUIRED)

@@ -23,6 +23,9 @@ public:
     Particle& getParticle(size_t _x, size_t _y);
     void setPositions();
     void findNeighbours(size_t _x, size_t _y);
+    void applyExternalForces(float _gravity, ngl::Vec3 _wind, float _timeStep);
+    void applyFixedConstraint(Particle &p);
+    void applyDistanceConstraint(Particle &p);
     void draw();
     void drawGL();
 
@@ -33,6 +36,7 @@ private:
     size_t pHeight;
     float widthStep;
     float heightStep;
+    float step;
     std::vector<Particle> particles;
     std::unique_ptr<ngl::AbstractVAO> m_vao;
 

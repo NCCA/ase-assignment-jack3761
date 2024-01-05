@@ -6,11 +6,10 @@
 
 ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
 {
-    widthStep = cWidth / static_cast<float>(pWidth);
-    heightStep = cHeight / static_cast<float>(pHeight);
+    step = std::min(cWidth / static_cast<float>(pWidth), cHeight / static_cast<float>(pHeight));
 
-    float px = -(cWidth * 0.5f) + widthStep * 0.5f;
-    float py = -(cHeight * 0.5f) + heightStep * 0.5f;
+    float px = -cWidth * 0.5f + step * 0.5f;
+    float py = -cHeight * 0.5f + step * 0.5f;
 
     for (size_t y = 0; y < pHeight; ++y)
     {
@@ -18,13 +17,15 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
         {
             Particle p;
             p.pos.m_x = px;
+            p.p_pos.m_x = px;
             p.pos.m_y = py;
+            p.p_pos.m_y = py;
             particles.push_back(p);
 
-            px += widthStep;
+            px += step;
         }
-        px = -(cWidth / 2.0f) + widthStep * 0.5f;
-        py += heightStep;
+        px = -cWidth * 0.5f + step * 0.5f;
+        py += step;
     }
 
     numParticles = particles.size();
@@ -43,7 +44,7 @@ void ClothMesh::drawGL()
     m_vao->draw();
     m_vao->unbind();
 
-    std::cout<<"drawGL\n";
+    // std::cout<<"drawGL\n";
 }
 
 void ClothMesh::findNeighbours(size_t _x, size_t _y)
@@ -53,6 +54,43 @@ void ClothMesh::findNeighbours(size_t _x, size_t _y)
     if (_x < pWidth -1) p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]); //right
     if (_y < pHeight -1) p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]); //above
     if (_y > 0) p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]); //below
+}
+
+void ClothMesh::applyExternalForces(float _gravity, ngl::Vec3 _wind, float _timeStep)
+{
+    for (Particle& p : particles)
+    {
+        p.v += ngl::Vec3{ 0, _gravity, 0 } *_timeStep + _wind * _timeStep;
+        p.p_pos += p.v;//* _timeStep;
+    }
+}
+
+void ClothMesh::applyFixedConstraint(Particle &p)
+{
+    // TODO change to use accumulator
+    ngl::Vec3 dt = p.pos - p.p_pos;
+    p.p_pos += dt;
+}
+
+void ClothMesh::applyDistanceConstraint(Particle& p)
+{
+    for (Particle* n : p.neighbours)
+    {
+		ngl::Vec3 delta = p.p_pos - n->p_pos;
+		float dist = delta.length();
+		float diff = (dist - step) / dist;
+
+        float invMassSum = 1.0f / (p.getInvMass() + n->getInvMass());
+
+        ngl::Vec3 correction1 = -p.getInvMass() * invMassSum * diff * delta;
+        ngl::Vec3 correction2 = n->getInvMass() * invMassSum * diff * delta;
+
+		p.p_pos += correction1;
+        if (!(n->isFixed))
+        {
+            n->p_pos += correction2;
+        }
+	}
 }
 
 void ClothMesh::setPositions()
@@ -117,15 +155,4 @@ Particle& ClothMesh::getParticle(size_t _x, size_t _y)
 {
     size_t index = _x + _y * pWidth;
     return getParticle(index);
-}
-
-
-float ClothMesh::getWidthStep() const
-{
-    return widthStep;
-}
-
-float ClothMesh::getHeightStep() const
-{
-    return heightStep;
 }

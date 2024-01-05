@@ -13,6 +13,7 @@ public:
     ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration, float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
 
     void runSim(float _delta);
+    void initialise();
     void solveConstraints();
     float getGravity() const;
     ngl::Vec3 getWind() const;
@@ -26,7 +27,7 @@ private:
     float gravity = -9.81f;
     ngl::Vec3 wind = {0.0, 0.0, 1.0};
     size_t timeStep = 1;
-    size_t solveIterations = 600;
+    size_t solveIterations = 10000;
     size_t numParticles;
 
 };
