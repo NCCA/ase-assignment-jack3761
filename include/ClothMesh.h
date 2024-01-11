@@ -34,8 +34,6 @@ private:
     float cHeight;
     size_t pWidth;
     size_t pHeight;
-    float widthStep;
-    float heightStep;
     float step;
     std::vector<Particle> particles;
     std::unique_ptr<ngl::AbstractVAO> m_vao;

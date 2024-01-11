@@ -42,7 +42,7 @@ void NGLScene::initializeGL()
   // enable multisampling for smoother drawing
   glEnable(GL_MULTISAMPLE);
 
-  m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{0.0f, 0.0f, 1.0f}, 1, 600, 10.0, 20.0, 20, 40);
+  m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{0.0f, 2.0f, 10.0f}, 1, 800, 10.0, 20.0, 20, 40);
   m_sim->initialise();
 
   ngl::ShaderLib::loadShader("ParticleShader", "shaders/ParticleVertex.glsl", "shaders/ParticleFragment.glsl");
@@ -106,10 +106,10 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
       }
       else
       {
-          m_animate = false();
+          m_animate = false;
       }
   case Qt::Key_S:
-          m_sim->runSim(0.01);
+          m_sim->runSim(0.1);
           break;
   default : break;
   }

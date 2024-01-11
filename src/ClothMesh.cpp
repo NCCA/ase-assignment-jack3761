@@ -61,7 +61,7 @@ void ClothMesh::applyExternalForces(float _gravity, ngl::Vec3 _wind, float _time
     for (Particle& p : particles)
     {
         p.v += ngl::Vec3{ 0, _gravity, 0 } *_timeStep + _wind * _timeStep;
-        p.p_pos += p.v;//* _timeStep;
+        p.p_pos += p.v * _timeStep;
     }
 }
 

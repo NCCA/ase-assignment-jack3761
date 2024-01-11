@@ -1,6 +1,6 @@
 #include "ClothSim.h"
 
-ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, solveIterations{_simDuration}
+ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, solveIterations{_solveIterations}
 {}
 
 ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
@@ -8,8 +8,8 @@ ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeigh
     mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 }
 
-ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration, float _cWidth,
-                   float _cHeight, size_t _pWidth, size_t _pHeight) : ClothSim(_gravity, _wind, _timeStep, _simDuration)
+ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations, float _cWidth,
+                   float _cHeight, size_t _pWidth, size_t _pHeight) : ClothSim(_gravity, _wind, _timeStep, _solveIterations)
 {
     mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 }
@@ -38,10 +38,6 @@ void ClothSim::runSim(float _delta)
 
     // set solved particle positions
     mesh.setPositions();
-
-    // visualise with ngl
-
-    // visualise within gui
 }
 
 void ClothSim::initialise()
@@ -53,8 +49,15 @@ void ClothSim::initialise()
             mesh.findNeighbours(i, j);
         }
     }
+    //top
     mesh.getParticle(mesh.getParticleWidth() - 1, mesh.getParticleHeight()-1).isFixed = true;
+    mesh.getParticle(int((mesh.getParticleWidth() - 1)/2), mesh.getParticleHeight()-1).isFixed = true;
+    //middle
     mesh.getParticle(0, mesh.getParticleHeight() - 1).isFixed = true;
+    // bottom
+    mesh.getParticle(0, 0).isFixed = true;
+    mesh.getParticle(mesh.getParticleWidth() - 1, 0).isFixed = true;
+
 }
 
 float ClothSim::getGravity() const

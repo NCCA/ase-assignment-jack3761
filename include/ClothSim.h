@@ -8,9 +8,9 @@ class ClothSim
 {
 public:
     ClothSim()=default;
-    ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration);
+    ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations);
     ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
-    ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _simDuration, float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
+    ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations, float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
 
     void runSim(float _delta);
     void initialise();
@@ -27,7 +27,7 @@ private:
     float gravity = -9.81f;
     ngl::Vec3 wind = {0.0, 0.0, 1.0};
     size_t timeStep = 1;
-    size_t solveIterations = 10000;
+    size_t solveIterations = 1000;
     size_t numParticles;
 
 };
