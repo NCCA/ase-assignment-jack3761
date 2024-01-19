@@ -51,13 +51,12 @@ void ClothSim::initialise()
     }
     //top
     mesh.getParticle(mesh.getParticleWidth() - 1, mesh.getParticleHeight()-1).isFixed = true;
-    mesh.getParticle(int((mesh.getParticleWidth() - 1)/2), mesh.getParticleHeight()-1).isFixed = true;
-    //middle
     mesh.getParticle(0, mesh.getParticleHeight() - 1).isFixed = true;
+    //middle
+    //mesh.getParticle(int((mesh.getParticleWidth() - 1)/2), mesh.getParticleHeight()-1).isFixed = true;
     // bottom
     mesh.getParticle(0, 0).isFixed = true;
     mesh.getParticle(mesh.getParticleWidth() - 1, 0).isFixed = true;
-
 }
 
 float ClothSim::getGravity() const
