@@ -18,7 +18,7 @@ TEST(Particle, defCtor)
     EXPECT_FLOAT_EQ(p.v.m_y, 0.0f);
     EXPECT_FLOAT_EQ(p.v.m_z, 0.0f);
 
-    EXPECT_FLOAT_EQ(p.mass, 1.0f);
+    EXPECT_FLOAT_EQ(p.mass, 0.1f);
 
     EXPECT_FLOAT_EQ(p.isFixed, false);
 }
@@ -39,7 +39,7 @@ TEST(Particle, ctor)
     EXPECT_FLOAT_EQ(p.v.m_y, 2.0f);
     EXPECT_FLOAT_EQ(p.v.m_z, 3.0f);
 
-    EXPECT_FLOAT_EQ(p.mass, 1.0f);
+    EXPECT_FLOAT_EQ(p.mass, 0.1f);
 
     EXPECT_FLOAT_EQ(p.isFixed, false);
 
@@ -56,9 +56,7 @@ TEST(ClothMesh, ctor)
     EXPECT_EQ(clothMesh.getParticleWidth(), 10);
     EXPECT_EQ(clothMesh.getParticleHeight(), 20);
 
-    // update for single step var
-    EXPECT_FLOAT_EQ(clothMesh.getWidthStep(), 2.0/10.0f);
-    EXPECT_FLOAT_EQ(clothMesh.getHeightStep(), 4.0/20.0f);
+    EXPECT_FLOAT_EQ(clothMesh.getStep(), 0.2f);
 
     EXPECT_EQ(clothMesh.getParticles().size(), 10 * 20);
 }

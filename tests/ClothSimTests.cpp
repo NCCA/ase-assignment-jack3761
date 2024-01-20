@@ -10,7 +10,7 @@ TEST(ClothSim, defCtor)
     EXPECT_FLOAT_EQ(sim.getWind().m_y, 0.0f);
     EXPECT_FLOAT_EQ(sim.getWind().m_z, 1.0f);
     EXPECT_FLOAT_EQ(sim.getTimeStep(), 1);
-    EXPECT_FLOAT_EQ(sim.getIterations(), 600);
+    EXPECT_FLOAT_EQ(sim.getIterations(), 1000);
 }
 
 TEST(ClothSim, simParamCtor)
@@ -36,8 +36,7 @@ TEST(ClothSim, simMeshCtor)
     EXPECT_EQ(sim.mesh.getParticleHeight(), 10);
 
     // update with new single step var
-    EXPECT_FLOAT_EQ(sim.mesh.getWidthStep(), 4.0/20.0f);
-    EXPECT_FLOAT_EQ(sim.mesh.getHeightStep(), 2.0/10.0f);
+    EXPECT_FLOAT_EQ(sim.mesh.getStep(), 0.2f);
 
     EXPECT_EQ(sim.mesh.getParticles().size(), 20 * 10);
 }
@@ -59,8 +58,7 @@ TEST(ClothSim, longCtor)
     EXPECT_EQ(sim.mesh.getParticleWidth(), 20);
     EXPECT_EQ(sim.mesh.getParticleHeight(), 10);
 
-    EXPECT_FLOAT_EQ(sim.mesh.getWidthStep(), 4.0/20.0f);
-    EXPECT_FLOAT_EQ(sim.mesh.getHeightStep(), 2.0/10.0f);
+    EXPECT_FLOAT_EQ(sim.mesh.getStep(), 0.2f);
 
     EXPECT_EQ(sim.mesh.getParticles().size(), 20 * 10);
 }

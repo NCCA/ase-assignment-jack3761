@@ -172,3 +172,7 @@ Particle& ClothMesh::getParticle(size_t _x, size_t _y)
     size_t index = _x + _y * pWidth;
     return getParticle(index);
 }
+
+float ClothMesh::getStep() const {
+    return step;
+}

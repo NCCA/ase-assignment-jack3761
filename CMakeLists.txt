@@ -58,22 +58,22 @@ add_custom_target(CopyShadersAndfonts ALL
 
 )
 
-#find_package(GTest CONFIG REQUIRED)
-#include(GoogleTest)
-#set(TestName ClothSimTests)
-#add_executable(${TestName}
-#        tests/ClothSimTests.cpp
-#        tests/ParticleTests.cpp
-#        src/ClothSim.cpp
-#        src/Particle.cpp
-#        src/ClothMesh.cpp
-#        include/ClothMesh.h
-#        include/Particle.h
+find_package(GTest CONFIG REQUIRED)
+include(GoogleTest)
+set(TestName ClothSimTests)
+add_executable(${TestName}
+        tests/ClothSimTests.cpp
+        tests/ParticleTests.cpp
+        src/ClothSim.cpp
+        src/Particle.cpp
+        src/ClothMesh.cpp
+        include/ClothMesh.h
+        include/Particle.h
 
-#)
-#target_include_directories(${TestName} PRIVATE include $ENV{HOME}/NGL/include)
-#target_link_libraries(${TestName} PRIVATE GTest::gtest GTest::gtest_main NGL)
-#gtest_discover_tests(${TestName})
+)
+target_include_directories(${TestName} PRIVATE include $ENV{HOME}/NGL/include)
+target_link_libraries(${TestName} PRIVATE GTest::gtest GTest::gtest_main NGL)
+gtest_discover_tests(${TestName})
 
 
 # ) 
