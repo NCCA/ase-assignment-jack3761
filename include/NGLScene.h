@@ -2,9 +2,12 @@
 #define NGLSCENE_H_
 #include <ngl/Vec3.h>
 #include "WindowParams.h"
+#include <QEvent>
+#include <QResizeEvent>
 
 // this must be included after NGL includes else we get a clash with gl libs
 #include <QOpenGLWindow>
+#include <QOpenGLWidget>
 #include <memory>
 #include <ngl/Mat4.h>
 #include <chrono>
@@ -24,14 +27,17 @@
 /// put in this file
 //----------------------------------------------------------------------------------------------------------------------
 
-class NGLScene : public QOpenGLWindow
+class NGLScene : public QOpenGLWidget
 {
+  Q_OBJECT;
   public:
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief ctor for our NGL drawing class
     /// @param [in] parent the parent window to the class
     //----------------------------------------------------------------------------------------------------------------------
     NGLScene();
+    NGLScene(QWidget *_parent );
+
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief dtor must close down ngl and release OpenGL resources
     //----------------------------------------------------------------------------------------------------------------------
@@ -49,6 +55,15 @@ class NGLScene : public QOpenGLWindow
     /// @brief this is called everytime we resize the window
     //----------------------------------------------------------------------------------------------------------------------
     void resizeGL(int _w, int _h) override;
+    std::unique_ptr<ClothSim> m_sim;
+
+
+public slots:
+    void playAndPause();
+    void addFixedParticle(const QString &text);
+    void removeFixedParticle(const QString &text);
+    void createMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
+    void updateParameters(float _gravity, float _windX, float _windY, float _windZ);
 
 private:
 
@@ -87,7 +102,6 @@ private:
     WinParams m_win;
     /// position for our model
     ngl::Vec3 m_modelPos;
-    std::unique_ptr<ClothSim> m_sim;
     ngl::Mat4 m_view;
     ngl::Mat4 m_project;
     std::chrono::steady_clock::time_point m_previousTime;

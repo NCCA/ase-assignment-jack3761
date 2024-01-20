@@ -33,6 +33,10 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
     m_vao = ngl::VAOFactory::createVAO(ngl::simpleVAO, GL_POINTS);
 }
 
+//ClothMesh::~ClothMesh() {
+//    m_vao->removeVAO();
+//}
+
 void ClothMesh::drawGL()
 {
     glPointSize(4.0);
@@ -122,8 +126,20 @@ void ClothMesh::draw()
             wCount = 1;
         }
     }
-
 }
+
+void ClothMesh::clearMesh()
+{
+		cWidth = 0.0f;
+		cHeight = 0.0f;
+		pWidth = 0;
+		pHeight = 0;
+		step = 0;
+
+		particles.clear();
+		m_vao->removeVAO();
+}
+
 
 float ClothMesh::getWidth() const {
     return cWidth;

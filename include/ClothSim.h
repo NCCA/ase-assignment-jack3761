@@ -13,6 +13,7 @@ public:
     ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations, float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
 
     void runSim(float _delta);
+    void createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
     void initialise();
     void solveConstraints();
     float getGravity() const;
@@ -21,6 +22,7 @@ public:
     size_t getIterations() const;
     void setGravity(float _gravity);
     void setWind(ngl::Vec3 _wind);
+    void setFixedPoint(size_t i, bool fixed);
     ClothMesh mesh;
 
 private:
@@ -29,6 +31,7 @@ private:
     size_t timeStep = 1;
     size_t solveIterations = 1000;
     size_t numParticles;
+    bool fixedPoints[6];
 
 };
 
