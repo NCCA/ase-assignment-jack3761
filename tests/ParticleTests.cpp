@@ -127,7 +127,7 @@ TEST(ClothMesh, applyForces)
 
 }
 
-TEST(Particle, applyFixedConstraint)
+TEST(ClothMesh, applyFixedConstraint)
 {
     ClothMesh clothMesh(3.0, 3.0, 3, 3);
     Particle& p = clothMesh.getParticle(2,2);
@@ -149,6 +149,29 @@ TEST(Particle, applyFixedConstraint)
     EXPECT_FLOAT_EQ(p.p_pos.m_y, -9.81);
     EXPECT_FLOAT_EQ(p.p_pos.m_z, 1.0);
 }
+
+TEST(ClothMesh, applyDistanceConstraint) 
+{
+   
+}
+
+TEST(ClothMesh, clearMesh)
+{		
+    ClothMesh clothMesh(2.0, 4.0, 10, 20);
+	clothMesh.clearMesh();
+
+	EXPECT_FLOAT_EQ(clothMesh.getWidth(), 0.0f);
+	EXPECT_FLOAT_EQ(clothMesh.getHeight(), 0.0f);
+
+	EXPECT_EQ(clothMesh.getParticleWidth(), 0);
+	EXPECT_EQ(clothMesh.getParticleHeight(), 0);
+
+	EXPECT_FLOAT_EQ(clothMesh.getStep(), 0.0f);
+
+	EXPECT_EQ(clothMesh.getParticles().size(), 0);
+	
+}
+
 
 
 

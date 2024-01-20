@@ -33,9 +33,6 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
     m_vao = ngl::VAOFactory::createVAO(ngl::simpleVAO, GL_POINTS);
 }
 
-//ClothMesh::~ClothMesh() {
-//    m_vao->removeVAO();
-//}
 
 void ClothMesh::drawGL()
 {
@@ -71,7 +68,6 @@ void ClothMesh::applyExternalForces(float _gravity, ngl::Vec3 _wind, float _time
 
 void ClothMesh::applyFixedConstraint(Particle &p)
 {
-    // TODO change to use accumulator
     ngl::Vec3 dt = p.pos - p.p_pos;
     p.p_pos += dt;
 }
@@ -102,7 +98,6 @@ void ClothMesh::setPositions()
     for (Particle &p : particles)
     {
         p.pos = p.p_pos;
-//        p.draw();
     }
 }
 
@@ -137,7 +132,9 @@ void ClothMesh::clearMesh()
 		step = 0;
 
 		particles.clear();
-		m_vao->removeVAO();
+        if (m_vao != nullptr) {
+            m_vao->removeVAO();
+        }
 }
 
 

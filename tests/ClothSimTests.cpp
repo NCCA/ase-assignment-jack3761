@@ -63,8 +63,24 @@ TEST(ClothSim, longCtor)
     EXPECT_EQ(sim.mesh.getParticles().size(), 20 * 10);
 }
 
-TEST(ClothSim, runSim)
+TEST(ClothSim, init)
 {
-    ClothSim sim (-9.81, {0,0,1}, 1, 5, 2, 2, 2, 2);
+	ClothSim sim(9.81f, {2.0f, 3.0f, 4.0f}, 4, 50, 4.0, 2.0, 20, 10);
 
+	sim.initialise();
+
+    Particle topLeft = sim.mesh.getParticle(0, sim.mesh.getParticleHeight() - 1);
+    Particle topRight = sim.mesh.getParticle(sim.mesh.getParticleWidth() - 1, sim.mesh.getParticleHeight() - 1);
+    Particle topMiddle = sim.mesh.getParticle(int((sim.mesh.getParticleWidth() - 1) / 2), sim.mesh.getParticleHeight() - 1);
+    Particle bottomLeft = sim.mesh.getParticle(0, 0);
+    Particle bottomRight = sim.mesh.getParticle(sim.mesh.getParticleWidth() - 1, 0);
+    Particle bottomMiddle = sim.mesh.getParticle(int((sim.mesh.getParticleWidth() - 1) / 2), 0);
+
+    EXPECT_EQ(topLeft.isFixed, true);
+    EXPECT_EQ(topRight.isFixed, true);
+    EXPECT_EQ(topMiddle.isFixed, false);
+    EXPECT_EQ(bottomLeft.isFixed, false);
+    EXPECT_EQ(bottomRight.isFixed, false);
+    EXPECT_EQ(bottomMiddle.isFixed, false);
 }
+
