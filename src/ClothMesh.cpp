@@ -6,10 +6,11 @@
 
 ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
 {
-    step = std::min(cWidth / static_cast<float>(pWidth), cHeight / static_cast<float>(pHeight));
+    widthStep = cWidth / static_cast<float>(pWidth);
+    heightStep = cHeight / static_cast<float>(pHeight);
 
-    float px = -cWidth * 0.5f + step * 0.5f;
-    float py = -cHeight * 0.5f + step * 0.5f;
+    float px = -cWidth * 0.5f + widthStep * 0.5f;
+    float py = -cHeight * 0.5f + heightStep * 0.5f;
 
     for (size_t y = 0; y < pHeight; ++y)
     {
@@ -22,10 +23,10 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
             p.p_pos.m_y = py;
             particles.push_back(p);
 
-            px += step;
+            px += widthStep;
         }
-        px = -cWidth * 0.5f + step * 0.5f;
-        py += step;
+        px = -cWidth * 0.5f + widthStep * 0.5f;
+        py += heightStep;
     }
 
     numParticles = particles.size();
@@ -51,10 +52,26 @@ void ClothMesh::drawGL()
 void ClothMesh::findNeighbours(size_t _x, size_t _y)
 {
     Particle *p = &getParticle(_x, _y);
-    if (_x > 0) p->neighbours.push_back(&particles[(_x-1) + _y * pWidth]); //left
-    if (_x < pWidth -1) p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]); //right
-    if (_y < pHeight -1) p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]); //above
-    if (_y > 0) p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]); //below
+    if (_x > 0)
+    {
+        p->neighbours.push_back(&particles[(_x-1) + _y * pWidth]);
+        p->yNeighbours.push_back(false); //left
+    }
+    if (_x < pWidth -1)
+    {
+        p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]);
+        p->yNeighbours.push_back(false); //right
+    }
+    if (_y < pHeight -1)
+    {
+        p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]);
+        p->yNeighbours.push_back(true); //above
+    }
+    if (_y > 0)
+    {
+        p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]);
+        p->yNeighbours.push_back(true); //below
+    }
 }
 
 void ClothMesh::applyExternalForces(float _gravity, ngl::Vec3 _wind, float _timeStep)
@@ -74,16 +91,26 @@ void ClothMesh::applyFixedConstraint(Particle &p)
 
 void ClothMesh::applyDistanceConstraint(Particle& p)
 {
-    for (Particle* n : p.neighbours)
+    for (size_t i=0; i<p.neighbours.size(); ++i)
     {
-		ngl::Vec3 delta = p.p_pos - n->p_pos;
-		float dist = delta.length();
-		float diff = (dist - step) / dist;
+      Particle* n = p.neighbours[i];
+      ngl::Vec3 delta = p.p_pos - n->p_pos;
+      float dist = delta.length();
+      float diff = 0;
 
-        float invMassSum = 1.0f / (p.getInvMass() + n->getInvMass());
+			if (p.yNeighbours[i])
+			{
+				diff = (dist - heightStep) / dist;
+			}
+			else
+			{
+				diff = (dist - widthStep) / dist;
+			}
 
-        ngl::Vec3 correction1 = -p.getInvMass() * invMassSum * diff * delta;
-        ngl::Vec3 correction2 = n->getInvMass() * invMassSum * diff * delta;
+			float invMassSum = 1.0f / (p.getInvMass() + n->getInvMass());
+
+      ngl::Vec3 correction1 = -p.getInvMass() * invMassSum * diff * delta;
+      ngl::Vec3 correction2 = n->getInvMass() * invMassSum * diff * delta;
 
 		p.p_pos += correction1;
         if (!(n->isFixed))
@@ -129,7 +156,8 @@ void ClothMesh::clearMesh()
 		cHeight = 0.0f;
 		pWidth = 0;
 		pHeight = 0;
-		step = 0;
+		widthStep = 0;
+        heightStep = 0;
 
 		particles.clear();
         if (m_vao != nullptr) {
@@ -170,6 +198,13 @@ Particle& ClothMesh::getParticle(size_t _x, size_t _y)
     return getParticle(index);
 }
 
-float ClothMesh::getStep() const {
-    return step;
+
+float ClothMesh::getWidthStep() const
+{
+    return widthStep;
+}
+
+float ClothMesh::getHeightStep() const
+{
+    return heightStep;
 }

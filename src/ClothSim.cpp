@@ -5,27 +5,15 @@ ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _so
 
 ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
 {
-	mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
-	fixedPoints[0]=true;
-	fixedPoints[1]=true;
-	for (size_t i=2; i<=6; ++i)
-	{
-		fixedPoints[i] = false;
-	}
-	initialise();
+	initFixedPoints();
+	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 }
 
 ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations, float _cWidth,
                    float _cHeight, size_t _pWidth, size_t _pHeight) : ClothSim(_gravity, _wind, _timeStep, _solveIterations)
 {
-	mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
-	fixedPoints[0]=true;
-	fixedPoints[1]=true;
-	for (size_t i=2; i<=6; ++i)
-	{
-		fixedPoints[i] = false;
-	}
-	initialise();
+	initFixedPoints();
+	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 }
 
 void ClothSim::runSim(float _delta)
@@ -38,7 +26,7 @@ void ClothSim::runSim(float _delta)
         for (size_t j = 0; j < mesh.getParticles().size(); ++j)
         {
             Particle* p = &mesh.getParticle(j);
-            p->a = ngl::Vec3{ 0.0f, 0.0f, 0.0f };
+            //p->a = ngl::Vec3{ 0.0f, 0.0f, 0.0f };
 
             // apply  constraints
             if (p->isFixed) { mesh.applyFixedConstraint(*p); }
@@ -60,6 +48,16 @@ void ClothSim::createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size
 		mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 
 		initialise();
+}
+
+void ClothSim::initFixedPoints()
+{
+		fixedPoints[0]=true;
+		fixedPoints[1]=true;
+		for (size_t i=2; i<=6; ++i)
+		{
+				fixedPoints[i] = false;
+		}
 }
 
 void ClothSim::initialise()

@@ -15,6 +15,7 @@ public:
     void runSim(float _delta);
     void createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
     void initialise();
+    void initFixedPoints();
     void solveConstraints();
     float getGravity() const;
     ngl::Vec3 getWind() const;

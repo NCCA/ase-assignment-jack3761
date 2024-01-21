@@ -15,7 +15,8 @@ public:
     float getHeight() const;
     size_t getParticleWidth() const;
     size_t getParticleHeight() const;
-    float getStep() const;
+    float getWidthStep() const;
+    float getHeightStep() const;
     size_t numParticles;
     std::vector<Particle>& getParticles();
     Particle& getParticle(size_t _index);
@@ -34,7 +35,8 @@ private:
     float cHeight;
     size_t pWidth;
     size_t pHeight;
-    float step;
+    float widthStep;
+    float heightStep;
     std::vector<Particle> particles;
     std::unique_ptr<ngl::AbstractVAO> m_vao;
 
