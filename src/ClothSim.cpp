@@ -6,14 +6,14 @@ ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _so
 ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
 {
 	initFixedPoints();
-	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
+	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight, 0.1);
 }
 
 ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations, float _cWidth,
                    float _cHeight, size_t _pWidth, size_t _pHeight) : ClothSim(_gravity, _wind, _timeStep, _solveIterations)
 {
 	initFixedPoints();
-	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
+	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight, 0.1);
 }
 
 void ClothSim::runSim(float _delta)
@@ -42,10 +42,10 @@ void ClothSim::runSim(float _delta)
     mesh.setPositions();
 }
 
-void ClothSim::createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
+void ClothSim::createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass)
 {
 		mesh.clearMesh();
-		mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
+		mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight, _pMass);
 
 		initialise();
 }
@@ -112,4 +112,9 @@ void ClothSim::setWind(ngl::Vec3 _wind)
 void ClothSim::setFixedPoint(size_t i, bool fixed)
 {
     fixedPoints[i] = fixed;
+}
+
+void ClothSim::setIterations(size_t _solveIterations)
+{
+    solveIterations = _solveIterations;
 }

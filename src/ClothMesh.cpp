@@ -4,7 +4,7 @@
 
 
 
-ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
+ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
 {
     widthStep = cWidth / static_cast<float>(pWidth);
     heightStep = cHeight / static_cast<float>(pHeight);
@@ -21,6 +21,7 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
             p.p_pos.m_x = px;
             p.pos.m_y = py;
             p.p_pos.m_y = py;
+            p.mass = _pMass;
             particles.push_back(p);
 
             px += widthStep;
@@ -45,8 +46,6 @@ void ClothMesh::drawGL()
     m_vao->setNumIndices(particles.size());
     m_vao->draw();
     m_vao->unbind();
-
-    // std::cout<<"drawGL\n";
 }
 
 void ClothMesh::findNeighbours(size_t _x, size_t _y)

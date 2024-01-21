@@ -15,7 +15,7 @@ public:
 	std::vector<Particle*> neighbours; // neighbouring particles
 	std::vector<bool> yNeighbours; // neighbouring particles relationship
 	bool isFixed=false;
-	float mass=0.1f;
+	float mass;
 	void draw();
 	void p_draw();
 	float getMass() const;

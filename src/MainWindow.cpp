@@ -23,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), m_ui(new Ui::MainW
             m_gl->createMesh(m_ui->cWidthSpin->value(),
                      m_ui->cHeightSpin->value(),
                      m_ui->pWidthSpin->value(),
-                     m_ui->pHeightSpin->value());
+                     m_ui->pHeightSpin->value(),
+                     m_ui->massSpin->value());
           });
   connect(m_ui->updateButton, &QPushButton::clicked,
           [=]()
@@ -32,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), m_ui(new Ui::MainW
         static_cast<float>(m_ui->gravitySpin->value()),
         static_cast<float>(m_ui->windXSpin->value()),
         static_cast<float>(m_ui->windYSpin->value()),
-        static_cast<float>(m_ui->windZSpin->value()));
+        static_cast<float>(m_ui->windZSpin->value()),
+        m_ui->iterationsSpin->value());
   });
   connect(m_ui->resetButton, &QPushButton::clicked,
           [=]()
@@ -41,7 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), m_ui(new Ui::MainW
             m_ui->windXSpin->setValue(0.0);
             m_ui->windYSpin->setValue(0.0);
             m_ui->windZSpin->setValue(0.0);
-            m_gl->updateParameters(-9.81, 0.0, 0.0, 0.0);
+            m_ui->iterationsSpin->setValue(1000);
+            m_gl->updateParameters(-9.81, 0.0, 0.0, 0.0, 1000);
           });
 
 };

@@ -143,10 +143,11 @@ void NGLScene::playAndPause()
 	m_animate = !m_animate;
 }
 
-void NGLScene::updateParameters(float _gravity, float _windX, float _windY, float _windZ)
+void NGLScene::updateParameters(float _gravity, float _windX, float _windY, float _windZ, size_t _solveIterations)
 {
 	m_sim->setGravity(_gravity);
 	m_sim->setWind(ngl::Vec3{_windX, _windY, _windZ});
+	m_sim->setIterations(_solveIterations);
 }
 
 void NGLScene::addFixedParticle(const QString &text)
@@ -222,9 +223,9 @@ void NGLScene::removeFixedParticle(const QString &text)
 	m_sim->setFixedPoint(i, false);
 }
 
-void NGLScene::createMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
+void NGLScene::createMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass)
 {
-	m_sim->createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
+	m_sim->createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight, _pMass);
 }
 
 
