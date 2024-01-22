@@ -4,7 +4,7 @@
 
 
 
-ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : m_cWidth{_cWidth}, m_cHeight{_cHeight}, m_pWidth{_pWidth}, m_pHeight{_pHeight}
+ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
 {
     m_widthStep = m_cWidth / static_cast<float>(m_pWidth);
     m_heightStep = m_cHeight / static_cast<float>(m_pHeight);

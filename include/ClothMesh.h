@@ -9,7 +9,8 @@
 class ClothMesh
 {
 public:
-    ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
+    ClothMesh()=default;
+    ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass);
     float getWidth() const;
     float getHeight() const;
     size_t getParticleWidth() const;

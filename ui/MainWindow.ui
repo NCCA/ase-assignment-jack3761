@@ -85,7 +85,11 @@
         <widget class="QDoubleSpinBox" name="windZSpin"/>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="massSpin"/>
+        <widget class="QDoubleSpinBox" name="massSpin">
+         <property name="value">
+          <double>0.100000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="9" column="0">
         <widget class="QLabel" name="gravityLabel">
@@ -116,7 +120,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="fixedParticles">
          <property name="text">
           <string>Add/Remove fixed m_particles</string>
          </property>
@@ -152,7 +156,7 @@
        <item row="1" column="1">
         <widget class="QSpinBox" name="pWidthSpin">
          <property name="value">
-          <number>20</number>
+          <number>10</number>
          </property>
         </widget>
        </item>
@@ -162,7 +166,7 @@
        <item row="1" column="2">
         <widget class="QSpinBox" name="pHeightSpin">
          <property name="value">
-          <number>40</number>
+          <number>20</number>
          </property>
         </widget>
        </item>
@@ -209,7 +213,28 @@
         </widget>
        </item>
        <item row="11" column="1">
-        <widget class="QSpinBox" name="iterationsSpin"/>
+        <widget class="QSpinBox" name="iterationsSpin">
+         <property name="maximum">
+          <number>20000</number>
+         </property>
+         <property name="value">
+          <number>1000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="pMass">
+         <property name="text">
+          <string>Particle Mass</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="solve">
+         <property name="text">
+          <string>Solve Iterations</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

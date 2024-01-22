@@ -15,7 +15,7 @@ public:
 	ngl::Vec3 m_v; // velocity
 	std::vector<Particle*> m_neighbours; // neighbouring m_particles
 	std::vector<bool> m_yNeighbours; // neighbouring m_particles relationship
-	float m_mass = 0.1f;
+	float m_mass;
 	bool isFixed=false;	
 	void draw();
 	void p_draw();

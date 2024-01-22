@@ -62,8 +62,8 @@ public slots:
     void playAndPause();
     void addFixedParticle(const QString &text);
     void removeFixedParticle(const QString &text);
-    void createMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
-    void updateParameters(float _gravity, float _windX, float _windY, float _windZ);
+    void createMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass);
+    void updateParameters(float _gravity, float _windX, float _windY, float _windZ, size_t _solveIterations);
 
 private:
 
