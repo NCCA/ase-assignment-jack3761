@@ -105,7 +105,6 @@ private:
     ngl::Mat4 m_view;
     ngl::Mat4 m_project;
     std::chrono::steady_clock::time_point m_previousTime;
-    int timerId = 0;
     bool m_animate = false;
 };
 

@@ -1,6 +1,6 @@
 #include "ClothSim.h"
 
-ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations) : gravity{_gravity}, wind{_wind}, timeStep{_timeStep}, solveIterations{_solveIterations}
+ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _solveIterations) : m_gravity{_gravity}, m_wind{_wind}, m_solveIterations{_solveIterations}
 {}
 
 ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
@@ -9,8 +9,8 @@ ClothSim::ClothSim(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeigh
 	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
 }
 
-ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _solveIterations, float _cWidth,
-                   float _cHeight, size_t _pWidth, size_t _pHeight) : ClothSim(_gravity, _wind, _timeStep, _solveIterations)
+ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _solveIterations, float _cWidth,
+                   float _cHeight, size_t _pWidth, size_t _pHeight) : ClothSim(_gravity, _wind, _solveIterations)
 {
 	initFixedPoints();
 	createNewMesh(_cWidth, _cHeight, _pWidth, _pHeight);
@@ -18,98 +18,96 @@ ClothSim::ClothSim(float _gravity, ngl::Vec3 _wind, size_t _timeStep, size_t _so
 
 void ClothSim::runSim(float _delta)
 {
-    mesh.applyExternalForces(gravity, wind, _delta);
+    m_mesh->applyExternalForces(m_gravity, m_wind, _delta);
 
     // apply constraints for each particle with particle centric approach
-    for (size_t i = 0; i < solveIterations; ++i)
+    for (size_t i = 0; i < m_solveIterations; ++i)
     {
-        for (size_t j = 0; j < mesh.getParticles().size(); ++j)
+        for (size_t j = 0; j < m_mesh->getParticles().size(); ++j)
         {
-            Particle* p = &mesh.getParticle(j);
+            Particle* p = &m_mesh->getParticle(j);
             //p->a = ngl::Vec3{ 0.0f, 0.0f, 0.0f };
 
             // apply  constraints
-            if (p->isFixed) { mesh.applyFixedConstraint(*p); }
+            if (p->isFixed) { m_mesh->applyFixedConstraint(*p); }
             else
             {
-                mesh.applyDistanceConstraint(*p);
+                m_mesh->applyDistanceConstraint(*p);
             }
         }
     }
 
 
     // set solved particle positions
-    mesh.setPositions();
+    m_mesh->setPositions();
 }
 
 void ClothSim::createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight)
 {
-		mesh.clearMesh();
-		mesh = ClothMesh(_cWidth, _cHeight, _pWidth, _pHeight);
+    /*if (m_mesh != nullptr) {
+        m_mesh->clearMesh();
+    }*/
+    m_mesh = std::make_unique<ClothMesh>(_cWidth, _cHeight, _pWidth, _pHeight);
 
-		initialise();
+
+	initialise();
 }
 
 void ClothSim::initFixedPoints()
 {
-		fixedPoints[0]=true;
-		fixedPoints[1]=true;
-		for (size_t i=2; i<=6; ++i)
-		{
-				fixedPoints[i] = false;
-		}
+	m_fixedPoints[0]=true;
+		m_fixedPoints[1]=true;
+	for (size_t i=2; i<=5; ++i)
+	{
+		m_fixedPoints[i] = false;
+	}
 }
 
 void ClothSim::initialise()
 {
-    for (size_t i = 0; i < mesh.getParticleWidth(); ++i)
+    for (size_t i = 0; i < m_mesh->getParticleWidth(); ++i)
     {
-        for (size_t j = 0; j < mesh.getParticleHeight(); ++j)
+        for (size_t j = 0; j < m_mesh->getParticleHeight(); ++j)
         {
-            mesh.findNeighbours(i, j);
+            m_mesh->findNeighbours(i, j);
         }
     }
     //top
-    mesh.getParticle(mesh.getParticleWidth() - 1, mesh.getParticleHeight()-1).isFixed = fixedPoints[0];
-    mesh.getParticle(0, mesh.getParticleHeight() - 1).isFixed = fixedPoints[1];
-    mesh.getParticle(int((mesh.getParticleWidth() - 1)/2), mesh.getParticleHeight()-1).isFixed = fixedPoints[2];
+    m_mesh->getParticle(m_mesh->getParticleWidth() - 1, m_mesh->getParticleHeight()-1).isFixed = m_fixedPoints[0];
+    m_mesh->getParticle(0, m_mesh->getParticleHeight() - 1).isFixed = m_fixedPoints[1];
+    m_mesh->getParticle(int((m_mesh->getParticleWidth() - 1)/2), m_mesh->getParticleHeight()-1).isFixed = m_fixedPoints[2];
     // bottom
-    mesh.getParticle(0, 0).isFixed = fixedPoints[3];
-    mesh.getParticle(mesh.getParticleWidth() - 1, 0).isFixed = fixedPoints[4];
-    mesh.getParticle(int((mesh.getParticleWidth() - 1)/2), 0).isFixed = fixedPoints[5];
+    m_mesh->getParticle(0, 0).isFixed = m_fixedPoints[3];
+    m_mesh->getParticle(m_mesh->getParticleWidth() - 1, 0).isFixed = m_fixedPoints[4];
+    m_mesh->getParticle(int((m_mesh->getParticleWidth() - 1)/2), 0).isFixed = m_fixedPoints[5];
 }
 
 float ClothSim::getGravity() const
 {
-    return gravity;
+    return m_gravity;
 }
 
 ngl::Vec3 ClothSim::getWind() const
 {
-    return wind;
-}
-
-size_t ClothSim::getTimeStep() const
-{
-    return timeStep;
+    return m_wind;
 }
 
 size_t ClothSim::getIterations() const
 {
-    return solveIterations;
+    return m_solveIterations;
 }
 
 void ClothSim::setGravity(float _gravity)
 {
-    gravity = _gravity;
+    m_gravity = _gravity;
 }
 
 void ClothSim::setWind(ngl::Vec3 _wind)
 {
-    wind = _wind;
+    m_wind = _wind;
 }
 
 void ClothSim::setFixedPoint(size_t i, bool fixed)
 {
-    fixedPoints[i] = fixed;
+    m_fixedPoints[i] = fixed;
 }

@@ -12,7 +12,6 @@ NGLScene::NGLScene()
 {
 	// re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
 	//setTitle("Blank NGL");
-	startTimer(10);
 }
 NGLScene::NGLScene( QWidget *_parent ) : QOpenGLWidget( _parent )
 {
@@ -20,8 +19,7 @@ NGLScene::NGLScene( QWidget *_parent ) : QOpenGLWidget( _parent )
 	// set this widget to have the initial keyboard focus
 	setFocus();
 	// re-size the widget to that of the parent (in this case the GLFrame passed in on construction)
-	resize(_parent->size());
-	startTimer(10);
+	resize(_parent->size());	
 }
 
 
@@ -51,16 +49,17 @@ void NGLScene::initializeGL()
 	// enable multisampling for smoother drawing
 	glEnable(GL_MULTISAMPLE);
 
-	m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{0.0f, 0.0f, 0.0f}, 1, 800, 10, 20, 20, 40);
+	
 
 	ngl::ShaderLib::loadShader("ParticleShader", "shaders/ParticleVertex.glsl", "shaders/ParticleFragment.glsl");
 	ngl::ShaderLib::use("ParticleShader");
 	m_view = ngl::lookAt({0,24,24}, {0,0,0}, {0,1,0});
 	ngl::ShaderLib::setUniform("MVP", m_project * m_view);
-	//startTimer(10);
+	startTimer(10);
 
 
 	m_previousTime = std::chrono::steady_clock::now();
+	m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{ 0.0f, 0.0f, 0.0f }, 800, 10, 20, 20, 40);
 }
 
 
@@ -81,7 +80,7 @@ void NGLScene::paintGL()
 	ngl::ShaderLib::use("ParticleShader");
 	ngl::ShaderLib::setUniform("MVP", m_project*m_view*mouseRotation);
 
-	m_sim->mesh.drawGL();
+	m_sim->m_mesh->drawGL();
 	//  std::cout<<"drawing\n";
 
 	ngl::ShaderLib::use(ngl::nglColourShader);
@@ -116,9 +115,6 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
 		{
 			m_animate = false;
 		}
-	case Qt::Key_S:
-		m_sim->runSim(0.1);
-		break;
 	default : break;
 	}
 	// finally update the GLWindow and re-draw
@@ -154,32 +150,32 @@ void NGLScene::addFixedParticle(const QString &text)
 	size_t i;
 	if (text == "Top Left")
 	{
-		m_sim->mesh.getParticle(0, m_sim->mesh.getParticleHeight() - 1).isFixed = true;
+		m_sim->m_mesh->getParticle(0, m_sim->m_mesh->getParticleHeight() - 1).isFixed = true;
 		i=0;
 	}
 	else if (text == "Top Right")
 	{
-		m_sim->mesh.getParticle(m_sim->mesh.getParticleWidth() - 1, m_sim->mesh.getParticleHeight()-1).isFixed = true;
+		m_sim->m_mesh->getParticle(m_sim->m_mesh->getParticleWidth() - 1, m_sim->m_mesh->getParticleHeight()-1).isFixed = true;
 		i=1;
 	}
 	else if (text == "Top Middle")
 	{
-		m_sim->mesh.getParticle(int((m_sim->mesh.getParticleWidth() - 1)/2), m_sim->mesh.getParticleHeight()-1).isFixed = true;
+		m_sim->m_mesh->getParticle(int((m_sim->m_mesh->getParticleWidth() - 1)/2), m_sim->m_mesh->getParticleHeight()-1).isFixed = true;
 		i=2;
 	}
 	else if (text == "Bottom Left")
 	{
-		m_sim->mesh.getParticle(0, 0).isFixed = true;
+		m_sim->m_mesh->getParticle(0, 0).isFixed = true;
 		i=3;
 	}
 	else if (text == "Bottom Right")
 	{
-		m_sim->mesh.getParticle(m_sim->mesh.getParticleWidth() - 1, 0).isFixed = true;
+		m_sim->m_mesh->getParticle(m_sim->m_mesh->getParticleWidth() - 1, 0).isFixed = true;
 		i=4;
 	}
 	else if (text == "Bottom Middle")
 	{
-		m_sim->mesh.getParticle(int((m_sim->mesh.getParticleWidth() - 1)/2), 0).isFixed = true;
+		m_sim->m_mesh->getParticle(int((m_sim->m_mesh->getParticleWidth() - 1)/2), 0).isFixed = true;
 		i=5;
 	}
 
@@ -191,32 +187,32 @@ void NGLScene::removeFixedParticle(const QString &text)
 	size_t i;
 	if (text == "Top Left")
 	{
-		m_sim->mesh.getParticle(0, m_sim->mesh.getParticleHeight() - 1).isFixed = false;
+		m_sim->m_mesh->getParticle(0, m_sim->m_mesh->getParticleHeight() - 1).isFixed = false;
 		i=0;
 	}
 	else if (text == "Top Right")
 	{
-		m_sim->mesh.getParticle(m_sim->mesh.getParticleWidth() - 1, m_sim->mesh.getParticleHeight()-1).isFixed = false;
+		m_sim->m_mesh->getParticle(m_sim->m_mesh->getParticleWidth() - 1, m_sim->m_mesh->getParticleHeight()-1).isFixed = false;
 		i=1;
 	}
 	else if (text == "Top Middle")
 	{
-		m_sim->mesh.getParticle(int((m_sim->mesh.getParticleWidth() - 1)/2), m_sim->mesh.getParticleHeight()-1).isFixed = false;
+		m_sim->m_mesh->getParticle(int((m_sim->m_mesh->getParticleWidth() - 1)/2), m_sim->m_mesh->getParticleHeight()-1).isFixed = false;
 		i=2;
 	}
 	else if (text == "Bottom Left")
 	{
-		m_sim->mesh.getParticle(0, 0).isFixed = false;
+		m_sim->m_mesh->getParticle(0, 0).isFixed = false;
 		i=3;
 	}
 	else if (text == "Bottom Right")
 	{
-		m_sim->mesh.getParticle(m_sim->mesh.getParticleWidth() - 1, 0).isFixed = false;
+		m_sim->m_mesh->getParticle(m_sim->m_mesh->getParticleWidth() - 1, 0).isFixed = false;
 		i=4;
 	}
 	else if (text == "Bottom Middle")
 	{
-		m_sim->mesh.getParticle(int((m_sim->mesh.getParticleWidth() - 1)/2), 0).isFixed = false;
+		m_sim->m_mesh->getParticle(int((m_sim->m_mesh->getParticleWidth() - 1)/2), 0).isFixed = false;
 		i=5;
 	}
 	m_sim->setFixedPoint(i, false);

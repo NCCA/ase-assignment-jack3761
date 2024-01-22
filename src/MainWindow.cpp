@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), m_ui(new Ui::MainW
             m_ui->windXSpin->setValue(0.0);
             m_ui->windYSpin->setValue(0.0);
             m_ui->windZSpin->setValue(0.0);
-            m_gl->updateParameters(-9.81, 0.0, 0.0, 0.0);
+            m_gl->updateParameters(-9.81f, 0.0f, 0.0f, 0.0f);
           });
 
 };

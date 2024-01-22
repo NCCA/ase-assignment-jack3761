@@ -118,7 +118,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Add/Remove fixed particles</string>
+          <string>Add/Remove fixed m_particles</string>
          </property>
         </widget>
        </item>

@@ -4,32 +4,32 @@
 
 
 
-ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
+ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight) : m_cWidth{_cWidth}, m_cHeight{_cHeight}, m_pWidth{_pWidth}, m_pHeight{_pHeight}
 {
-    widthStep = cWidth / static_cast<float>(pWidth);
-    heightStep = cHeight / static_cast<float>(pHeight);
+    m_widthStep = m_cWidth / static_cast<float>(m_pWidth);
+    m_heightStep = m_cHeight / static_cast<float>(m_pHeight);
 
-    float px = -cWidth * 0.5f + widthStep * 0.5f;
-    float py = -cHeight * 0.5f + heightStep * 0.5f;
+    float px = -m_cWidth * 0.5f + m_widthStep * 0.5f;
+    float py = -m_cHeight * 0.5f + m_heightStep * 0.5f;
 
-    for (size_t y = 0; y < pHeight; ++y)
+    for (size_t y = 0; y < m_pHeight; ++y)
     {
-        for (size_t x = 0; x < pWidth; ++x)
+        for (size_t x = 0; x < m_pWidth; ++x)
         {
             Particle p;
-            p.pos.m_x = px;
-            p.p_pos.m_x = px;
-            p.pos.m_y = py;
-            p.p_pos.m_y = py;
-            particles.push_back(p);
+            p.m_pos.m_x = px;
+            p.m_p_pos.m_x = px;
+            p.m_pos.m_y = py;
+            p.m_p_pos.m_y = py;
+            m_particles.push_back(p);
 
-            px += widthStep;
+            px += m_widthStep;
         }
-        px = -cWidth * 0.5f + widthStep * 0.5f;
-        py += heightStep;
+        px = -m_cWidth * 0.5f + m_widthStep * 0.5f;
+        py += m_heightStep;
     }
 
-    numParticles = particles.size();
+    numParticles = m_particles.size();
 
     m_vao = ngl::VAOFactory::createVAO(ngl::simpleVAO, GL_POINTS);
 }
@@ -39,14 +39,13 @@ void ClothMesh::drawGL()
 {
     glPointSize(4.0);
     m_vao->bind();
-    m_vao->setData(ngl::AbstractVAO::VertexData(particles.size()*sizeof(Particle), particles[0].pos.m_x));
+    m_vao->setData(ngl::AbstractVAO::VertexData(m_particles.size()*sizeof(Particle), m_particles[0].m_pos.m_x));
     m_vao->setVertexAttributePointer(0, 3, GL_FLOAT, sizeof(Particle), 0);
+    m_vao->setVertexAttributePointer(1, 3, GL_FLOAT, sizeof(Particle), 6);
 
-    m_vao->setNumIndices(particles.size());
+    m_vao->setNumIndices(m_particles.size());
     m_vao->draw();
     m_vao->unbind();
-
-    // std::cout<<"drawGL\n";
 }
 
 void ClothMesh::findNeighbours(size_t _x, size_t _y)
@@ -54,57 +53,57 @@ void ClothMesh::findNeighbours(size_t _x, size_t _y)
     Particle *p = &getParticle(_x, _y);
     if (_x > 0)
     {
-        p->neighbours.push_back(&particles[(_x-1) + _y * pWidth]);
-        p->yNeighbours.push_back(false); //left
+        p->m_neighbours.push_back(&m_particles[(_x-1) + _y * m_pWidth]);
+        p->m_yNeighbours.push_back(false); //left
     }
-    if (_x < pWidth -1)
+    if (_x < m_pWidth -1)
     {
-        p->neighbours.push_back(&particles[(_x+1) + _y * pWidth]);
-        p->yNeighbours.push_back(false); //right
+        p->m_neighbours.push_back(&m_particles[(_x+1) + _y * m_pWidth]);
+        p->m_yNeighbours.push_back(false); //right
     }
-    if (_y < pHeight -1)
+    if (_y < m_pHeight -1)
     {
-        p->neighbours.push_back(&particles[_x + (_y+1)*pWidth]);
-        p->yNeighbours.push_back(true); //above
+        p->m_neighbours.push_back(&m_particles[_x + (_y+1)*m_pWidth]);
+        p->m_yNeighbours.push_back(true); //above
     }
     if (_y > 0)
     {
-        p->neighbours.push_back(&particles[_x + (_y-1)*pWidth]);
-        p->yNeighbours.push_back(true); //below
+        p->m_neighbours.push_back(&m_particles[_x + (_y-1)*m_pWidth]);
+        p->m_yNeighbours.push_back(true); //below
     }
 }
 
 void ClothMesh::applyExternalForces(float _gravity, ngl::Vec3 _wind, float _timeStep)
 {
-    for (Particle& p : particles)
+    for (Particle& p : m_particles)
     {
-        p.v += ngl::Vec3{ 0, _gravity, 0 } *_timeStep + _wind * _timeStep;
-        p.p_pos += p.v * _timeStep;
+        p.m_v += ngl::Vec3{ 0, _gravity, 0 } *_timeStep + _wind * _timeStep;
+        p.m_p_pos += p.m_v * _timeStep;
     }
 }
 
 void ClothMesh::applyFixedConstraint(Particle &p)
 {
-    ngl::Vec3 dt = p.pos - p.p_pos;
-    p.p_pos += dt;
+    ngl::Vec3 dt = p.m_pos - p.m_p_pos;
+    p.m_p_pos += dt;
 }
 
 void ClothMesh::applyDistanceConstraint(Particle& p)
 {
-    for (size_t i=0; i<p.neighbours.size(); ++i)
+    for (size_t i=0; i<p.m_neighbours.size(); ++i)
     {
-      Particle* n = p.neighbours[i];
-      ngl::Vec3 delta = p.p_pos - n->p_pos;
+      Particle* n = p.m_neighbours[i];
+      ngl::Vec3 delta = p.m_p_pos - n->m_p_pos;
       float dist = delta.length();
       float diff = 0;
 
-			if (p.yNeighbours[i])
+			if (p.m_yNeighbours[i])
 			{
-				diff = (dist - heightStep) / dist;
+				diff = (dist - m_heightStep) / dist;
 			}
 			else
 			{
-				diff = (dist - widthStep) / dist;
+				diff = (dist - m_widthStep) / dist;
 			}
 
 			float invMassSum = 1.0f / (p.getInvMass() + n->getInvMass());
@@ -112,19 +111,19 @@ void ClothMesh::applyDistanceConstraint(Particle& p)
       ngl::Vec3 correction1 = -p.getInvMass() * invMassSum * diff * delta;
       ngl::Vec3 correction2 = n->getInvMass() * invMassSum * diff * delta;
 
-		p.p_pos += correction1;
+		p.m_p_pos += correction1;
         if (!(n->isFixed))
         {
-            n->p_pos += correction2;
+            n->m_p_pos += correction2;
         }
 	}
 }
 
 void ClothMesh::setPositions()
 {
-    for (Particle &p : particles)
+    for (Particle &p : m_particles)
     {
-        p.pos = p.p_pos;
+        p.m_pos = p.m_p_pos;
     }
 }
 
@@ -132,19 +131,19 @@ void ClothMesh::draw()
 {
     size_t wCount = 0;
 
-    for (Particle p : particles)
+    for (Particle p : m_particles)
     {
-        if (wCount < pWidth)
+        if (wCount < m_pWidth)
         {
             std::cout << std::fixed
-                      << std::setprecision(2) << (p.pos.m_x <= 0 ? " (" : " ( ")<< p.pos.m_x << "," << (p.pos.m_y <= 0 ? "" : " ") << p.pos.m_y << "," << (p.pos.m_z <= 0 ? "" : " ") << p.pos.m_z << ") *";
+                      << std::setprecision(2) << (p.m_pos.m_x <= 0 ? " (" : " ( ")<< p.m_pos.m_x << "," << (p.m_pos.m_y <= 0 ? "" : " ") << p.m_pos.m_y << "," << (p.m_pos.m_z <= 0 ? "" : " ") << p.m_pos.m_z << ") *";
             wCount++;
         }
         else
         {
             std::cout << "\n";
             std::cout << std::fixed
-                      << std::setprecision(2) << (p.pos.m_x <= 0 ? " (" : " ( ")<< p.pos.m_x << "," << (p.pos.m_y <= 0 ? "" : " ") << p.pos.m_y << "," << (p.pos.m_z <= 0 ? "" : " ") << p.pos.m_z << ") *";
+                      << std::setprecision(2) << (p.m_pos.m_x <= 0 ? " (" : " ( ")<< p.m_pos.m_x << "," << (p.m_pos.m_y <= 0 ? "" : " ") << p.m_pos.m_y << "," << (p.m_pos.m_z <= 0 ? "" : " ") << p.m_pos.m_z << ") *";
             wCount = 1;
         }
     }
@@ -152,14 +151,14 @@ void ClothMesh::draw()
 
 void ClothMesh::clearMesh()
 {
-		cWidth = 0.0f;
-		cHeight = 0.0f;
-		pWidth = 0;
-		pHeight = 0;
-		widthStep = 0;
-        heightStep = 0;
+		m_cWidth = 0.0f;
+		m_cHeight = 0.0f;
+		m_pWidth = 0;
+		m_pHeight = 0;
+		m_widthStep = 0;
+        m_heightStep = 0;
 
-		particles.clear();
+		m_particles.clear();
         if (m_vao != nullptr) {
             m_vao->removeVAO();
         }
@@ -167,44 +166,44 @@ void ClothMesh::clearMesh()
 
 
 float ClothMesh::getWidth() const {
-    return cWidth;
+    return m_cWidth;
 }
 
 float ClothMesh::getHeight() const {
-    return cHeight;
+    return m_cHeight;
 }
 
 size_t ClothMesh::getParticleWidth() const {
-    return pWidth;
+    return m_pWidth;
 }
 
 size_t ClothMesh::getParticleHeight() const {
-    return pHeight;
+    return m_pHeight;
 }
 
 std::vector<Particle>& ClothMesh::getParticles() {
-    return particles;
+    return m_particles;
 }
 
 
 Particle& ClothMesh::getParticle(size_t _index)
 {
-    return particles[_index];
+    return m_particles[_index];
 }
 
 Particle& ClothMesh::getParticle(size_t _x, size_t _y)
 {
-    size_t index = _x + _y * pWidth;
+    size_t index = _x + _y * m_pWidth;
     return getParticle(index);
 }
 
 
 float ClothMesh::getWidthStep() const
 {
-    return widthStep;
+    return m_widthStep;
 }
 
 float ClothMesh::getHeightStep() const
 {
-    return heightStep;
+    return m_heightStep;
 }

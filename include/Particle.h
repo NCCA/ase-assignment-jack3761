@@ -9,13 +9,14 @@ public:
 	Particle() = default;
 	Particle(float _x, float _y, float _z);
 	Particle(float _x, float _y, float _z, float _vx, float _vy, float _vz);
-	ngl::Vec3 pos; // actual position
-	ngl::Vec3 p_pos; // proposed position
-	ngl::Vec3 v; // velocity
-	std::vector<Particle*> neighbours; // neighbouring particles
-	std::vector<bool> yNeighbours; // neighbouring particles relationship
-	bool isFixed=false;
-	float mass=0.1f;
+	ngl::Vec3 m_pos; // actual position
+	ngl::Vec3 m_p_pos; // proposed position
+	ngl::Vec3 colour = { 0,0,0 }; // colour
+	ngl::Vec3 m_v; // velocity
+	std::vector<Particle*> m_neighbours; // neighbouring m_particles
+	std::vector<bool> m_yNeighbours; // neighbouring m_particles relationship
+	float m_mass = 0.1f;
+	bool isFixed=false;	
 	void draw();
 	void p_draw();
 	float getMass() const;

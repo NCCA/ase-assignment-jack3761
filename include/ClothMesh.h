@@ -9,7 +9,6 @@
 class ClothMesh
 {
 public:
-    ClothMesh()=default;
     ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight);
     float getWidth() const;
     float getHeight() const;
@@ -31,13 +30,13 @@ public:
     void drawGL();
 
 private:
-    float cWidth;
-    float cHeight;
-    size_t pWidth;
-    size_t pHeight;
-    float widthStep;
-    float heightStep;
-    std::vector<Particle> particles;
+    float m_cWidth;
+    float m_cHeight;
+    size_t m_pWidth;
+    size_t m_pHeight;
+    float m_widthStep;
+    float m_heightStep;
+    std::vector<Particle> m_particles;
     std::unique_ptr<ngl::AbstractVAO> m_vao;
 
 };
