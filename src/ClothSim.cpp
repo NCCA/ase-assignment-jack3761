@@ -26,7 +26,6 @@ void ClothSim::runSim(float _delta)
         for (size_t j = 0; j < m_mesh->getParticles().size(); ++j)
         {
             Particle* p = &m_mesh->getParticle(j);
-            //p->a = ngl::Vec3{ 0.0f, 0.0f, 0.0f };
 
             // apply  constraints
             if (p->isFixed) { m_mesh->applyFixedConstraint(*p); }
@@ -44,11 +43,7 @@ void ClothSim::runSim(float _delta)
 
 void ClothSim::createNewMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass)
 {
-    /*if (m_mesh != nullptr) {
-        m_mesh->clearMesh();
-    }*/
-    m_mesh = std::make_unique<ClothMesh>(_cWidth, _cHeight, _pWidth, _pHeight);
-
+    m_mesh = std::make_unique<ClothMesh>(_cWidth, _cHeight, _pWidth, _pHeight, _pMass);
 
 	initialise();
 }
@@ -114,5 +109,5 @@ void ClothSim::setFixedPoint(size_t i, bool fixed)
 
 void ClothSim::setIterations(size_t _solveIterations)
 {
-    solveIterations = _solveIterations;
+    m_solveIterations = _solveIterations;
 }

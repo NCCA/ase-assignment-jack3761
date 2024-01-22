@@ -4,7 +4,7 @@
 
 
 
-ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass) : cWidth{_cWidth}, cHeight{_cHeight}, pWidth{_pWidth}, pHeight{_pHeight}
+ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHeight, float _pMass) : m_cWidth{_cWidth}, m_cHeight{_cHeight}, m_pWidth{_pWidth}, m_pHeight{_pHeight}
 {
     m_widthStep = m_cWidth / static_cast<float>(m_pWidth);
     m_heightStep = m_cHeight / static_cast<float>(m_pHeight);
@@ -28,8 +28,6 @@ ClothMesh::ClothMesh(float _cWidth, float _cHeight, size_t _pWidth, size_t _pHei
         px = -m_cWidth * 0.5f + m_widthStep * 0.5f;
         py += m_heightStep;
     }
-
-    numParticles = m_particles.size();
 
     m_vao = ngl::VAOFactory::createVAO(ngl::simpleVAO, GL_POINTS);
 }
@@ -147,21 +145,6 @@ void ClothMesh::draw()
             wCount = 1;
         }
     }
-}
-
-void ClothMesh::clearMesh()
-{
-		m_cWidth = 0.0f;
-		m_cHeight = 0.0f;
-		m_pWidth = 0;
-		m_pHeight = 0;
-		m_widthStep = 0;
-        m_heightStep = 0;
-
-		m_particles.clear();
-        if (m_vao != nullptr) {
-            m_vao->removeVAO();
-        }
 }
 
 
