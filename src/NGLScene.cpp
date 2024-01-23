@@ -59,7 +59,7 @@ void NGLScene::initializeGL()
 
 
 	m_previousTime = std::chrono::steady_clock::now();
-	m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{ 0.0f, 0.0f, 0.0f }, 800, 10, 20, 20, 40);
+	m_sim = std::make_unique<ClothSim>(-9.81f, ngl::Vec3{ 0.0f, 0.0f, 0.0f }, 800, 10, 20, 10, 20);
 }
 
 
@@ -80,13 +80,12 @@ void NGLScene::paintGL()
 	ngl::ShaderLib::use("ParticleShader");
 	ngl::ShaderLib::setUniform("MVP", m_project*m_view*mouseRotation);
 
+	// draw the mesh
 	m_sim->m_mesh->drawGL();
-	//  std::cout<<"drawing\n";
 
 	ngl::ShaderLib::use(ngl::nglColourShader);
 	ngl::ShaderLib::setUniform("Colour", 1.0f, 0.0f, 1.0f, 1.0f);
 	ngl::ShaderLib::setUniform("MVP", m_project*m_view*mouseRotation);
-	//  ngl::VAOPrimitives::draw("floor");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -129,7 +128,7 @@ void NGLScene::timerEvent(QTimerEvent *_event)
 	m_previousTime = now;
 	if (m_animate)
 	{
-		m_sim->runSim(delta);
+		m_sim->runSim(delta);		
 	}
 	update();
 }
